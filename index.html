@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0d0f12">
+<title>My Soundboard Studio</title>
+<style>
+:root{color-scheme:dark;--bg:#0d0f12;--panel:#181b21;--panel2:#22262e;--line:#343943;--text:#f5f7fa;--muted:#9da4b0;--accent:#5b8cff}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display",Arial,sans-serif}
+header{position:sticky;top:0;z-index:10;padding:16px;background:rgba(13,15,18,.96);backdrop-filter:blur(15px);border-bottom:1px solid var(--line)}
+h1{font-size:22px;margin:0 0 13px}
+.toolbar{display:flex;gap:8px;overflow:auto}
+button{min-height:44px;border:1px solid var(--line);border-radius:12px;background:var(--panel);color:var(--text);padding:11px 14px;font-size:15px}
+button.primary{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600}
+main{max-width:900px;margin:auto;padding:14px 14px 80px}
+.boards{display:flex;gap:8px;overflow:auto;margin-bottom:14px}
+.board{white-space:nowrap}
+.board.active{background:var(--panel2);border-color:var(--accent)}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.pad{min-height:125px;padding:15px;text-align:left;display:flex;flex-direction:column;justify-content:space-between;overflow:hidden}
+.pad strong{font-size:17px}
+.pad small{color:var(--muted)}
+.pad-actions{display:flex;gap:6px;margin-top:8px}
+.pad-actions button{min-height:40px;padding:7px 10px}
+.playing{outline:2px solid var(--accent)}
+.empty{text-align:center;border:1px dashed var(--line);border-radius:16px;padding:35px 15px;color:var(--muted)}
+dialog{width:min(94vw,620px);background:var(--panel);color:var(--text);border:1px solid var(--line);border-radius:18px;padding:0}
+dialog::backdrop{background:rgba(0,0,0,.72)}
+.modal{padding:18px}
+.field{margin:14px 0}
+label{display:block;font-size:13px;color:var(--muted);margin-bottom:6px}
+input[type=text],input[type=file]{width:100%;background:var(--bg);border:1px solid var(--line);color:var(--text);border-radius:10px;padding:12px;font-size:16px}
+input[type=range]{width:100%}
+.row{display:flex;gap:8px;flex-wrap:wrap}
+.row>*{flex:1}
+.wave{height:90px;margin:14px 0;border-radius:12px;position:relative;overflow:hidden;background:repeating-linear-gradient(90deg,#303640 0 2px,transparent 2px 7px)}
+.selection{position:absolute;top:0;bottom:0;background:rgba(91,140,255,.22);border-left:3px solid var(--accent);border-right:3px solid var(--accent)}
+.note{font-size:12px;line-height:1.45;color:var(--muted)}
+.recording{color:#ff6262!important}
+@media(min-width:650px){.grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>🎛️ My Soundboard Studio</h1>
+<div class="toolbar">
+<button class="primary" id="addBtn">＋ Sound hinzufügen</button>
+<button id="recordBtn">● Aufnahme</button>
+<button id="boardBtn">＋ Board</button>
+</div>
+</header>
+
+<main>
+<div class="boards" id="boards"></div>
+<div class="grid" id="grid"></div>
+<div class="empty" id="empty">
+Noch keine Sounds vorhanden.<br>
+Importiere einen Sound oder nimm einen auf.
+</div>
+</main>
+
+<dialog id="addDialog">
+<div class="modal">
+<h2>Sound hinzufügen</h2>
+
+<div class="field">
+<label>Audiodatei</label>
+<input id="audioFile" type="file" accept="audio/*">
+</div>
+
+<div class="field">
+<label>Name</label>
+<input id="soundName" type="text" placeholder="z. B. Applaus">
+</div>
+
+<div class="field">
+<label>Icon</label>
+<input id="soundIcon" type="text" value="🔊">
+</div>
+
+<div class="row">
+<button id="cancelAdd">Abbrechen</button>
+<button class="primary" id="saveAdd">Speichern</button>
+</div>
+</div>
+</dialog>
+
+<dialog id="editDialog">
+<div class="modal">
+
+<h2 id="editTitle">Sound bearbeiten</h2>
+
+<div class="wave">
+<div class="selection" id="selection"></div>
+</div>
+
+<div class="row">
+
+<div class="field">
+<label>Start</label>
+<input id="startRange" type="range" min="0" max="100" value="0">
+</div>
+
+<div class="field">
+<label>Ende</label>
+<input id="endRange" type="range" min="0" max="100" value="100">
+</div>
+
+</div>
+
+<div class="field">
+<label>Lautstärke</label>
+<input id="volumeRange" type="range" min="0" max="100" value="100">
+</div>
+
+<div class="field">
+<label>Name</label>
+<input id="editName" type="text">
+</div>
+
+<div class="row">
+<button id="closeEdit">Schließen</button>
+<button id="previewBtn">▶ Vorschau</button>
+<button class="primary" id="saveEdit">Speichern</button>
+</div>
+
+<p class="note">
+Der ausgewählte Bereich wird beim Abspielen verwendet. Die Originaldatei bleibt unverändert erhalten.
+</p>
+
+</div>
+</dialog>
+
+<script>
+const DB_NAME="MySoundboardStudio";
+const DB_VERSION=1;
+
+let db;
+let state={
+ boards:["Hauptboard"],
+ current:"Hauptboard",
+ sounds:[]
+};
+
+let currentEdit=null;
+let currentAudio=null;
+let recorder=null;
+let recordedChunks=[];
+
+const $=id=>document.getElementById(id);
+
+function openDB(){
+ return new Promise((resolve,reject)=>{
+  const request=indexedDB.open(DB_NAME,DB_VERSION);
+
+  request.onupgradeneeded=()=>{
+   const d=request.result;
+
+   if(!d.objectStoreNames.contains("meta"))
+    d.createObjectStore("meta",{keyPath:"key"});
+
+   if(!d.objectStoreNames.contains("sounds"))
+    d.createObjectStore("sounds",{keyPath:"id"});
+  };
+
+  request.onsuccess=()=>{
+   db=request.result;
+   resolve();
+  };
+
+  request.onerror=()=>reject(request.error);
+ });
+}
+
+function getMeta(){
+ return new Promise((resolve,reject)=>{
+  const r=db.transaction("meta").objectStore("meta").get("state");
+  r.onsuccess=()=>resolve(r.result);
+  r.onerror=()=>reject(r.error);
+ });
+}
+
+function saveMeta(){
+ return new Promise((resolve,reject)=>{
+  const r=db.transaction("meta","readwrite")
+   .objectStore("meta")
+   .put({
+    key:"state",
+    boards:state.boards,
+    current:state.current
+   });
+
+  r.onsuccess=()=>resolve();
+  r.onerror=()=>reject(r.error);
+ });
+}
+
+function getSounds(){
+ return new Promise((resolve,reject)=>{
+  const r=db.transaction("sounds").objectStore("sounds").getAll();
+  r.onsuccess=()=>resolve(r.result);
+  r.onerror=()=>reject(r.error);
+ });
+}
+
+function saveSound(sound){
+ return new Promise((resolve,reject)=>{
+  const r=db.transaction("sounds","readwrite")
+   .objectStore("sounds")
+   .put(sound);
+
+  r.onsuccess=()=>resolve();
+  r.onerror=()=>reject(r.error);
+ });
+}
+
+function deleteSound(id){
+ return new Promise((resolve,reject)=>{
+  const r=db.transaction("sounds","readwrite")
+   .objectStore("sounds")
+   .delete(id);
+
+  r.onsuccess=()=>resolve();
+  r.onerror=()=>reject(r.error);
+ });
+}
+
+function esc(value){
+ return String(value).replace(/[&<>"']/g,c=>({
+  "&":"&amp;",
+  "<":"&lt;",
+  ">":"&gt;",
+  '"':"&quot;",
+  "'":"&#39;"
+ }[c]));
+}
+
+function formatTime(seconds){
+ if(!isFinite(seconds))return "—";
+
+ const m=Math.floor(seconds/60);
+ const s=Math.floor(seconds%60);
+
+ return m+":"+String(s).padStart(2,"0");
+}
+
+function makeURL(sound){
+ if(!sound.url && sound.blob)
+  sound.url=URL.createObjectURL(sound.blob);
+
+ return sound.url;
+}
+
+function render(){
+
+ $("boards").innerHTML="";
+
+ state.boards.forEach(board=>{
+
+  const b=document.createElement("button");
+
+  b.className="board"+(board===state.current?" active":"");
+
+  b.textContent=board;
+
+  b.onclick=async()=>{
+   state.current=board;
+   await saveMeta();
+   render();
+  };
+
+  $("boards").appendChild(b);
+ });
+
+ $("grid").innerHTML="";
+
+ const list=state.sounds.filter(
+  sound=>sound.board===state.current
+ );
+
+ $("empty").style.display=
+  list.length?"none":"block";
+
+ list.forEach(sound=>{
+
+  makeURL(sound);
+
+  const pad=document.createElement("div");
+
+  pad.className="pad";
+  pad.style.background=sound.color||"var(--panel)";
+
+  pad.innerHTML=`
+   <div>
+    <div style="font-size:29px">${esc(sound.icon||"🔊")}</div>
+    <strong>${esc(sound.name)}</strong>
+   </div>
+
+   <div>
+    <small>${formatTime(sound.end-sound.start)}</small>
+
+    <div class="pad-actions">
+     <button data-play>▶</button>
+     <button data-edit>✎</button>
+     <button data-delete>🗑</button>
+    </div>
+   </div>
+  `;
+
+  pad.querySelector("[data-play]")
+   .onclick=()=>playSound(sound,pad);
+
+  pad.querySelector("[data-edit]")
+   .onclick=()=>openEditor(sound);
+
+  pad.querySelector("[data-delete]")
+   .onclick=async()=>{
+    if(!confirm("Diesen Sound wirklich löschen?"))
+     return;
+
+    state.sounds=state.sounds.filter(
+     x=>x.id!==sound.id
+    );
+
+    await deleteSound(sound.id);
+    render();
+   };
+
+  $("grid").appendChild(pad);
+ });
+}
+
+function stopAudio(){
+
+ if(currentAudio){
+  currentAudio.pause();
+  currentAudio.currentTime=0;
+  currentAudio=null;
+ }
+
+ document.querySelectorAll(".playing")
+  .forEach(x=>x.classList.remove("playing"));
+}
+
+function playSound(sound,pad){
+
+ stopAudio();
+
+ const url=makeURL(sound);
+
+ if(!url)return;
+
+ const a=new Audio(url);
+
+ currentAudio=a;
+
+ a.volume=(sound.volume??100)/100;
+ a.currentTime=Math.max(0,sound.start||0);
+
+ pad.classList.add("playing");
+
+ a.ontimeupdate=()=>{
+
+  if(a.currentTime>=sound.end){
+
+   a.pause();
+
+   if(sound.loop){
+    a.currentTime=sound.start;
+    a.play();
+   }else{
+    pad.classList.remove("playing");
+    currentAudio=null;
+   }
+  }
+ };
+
+ a.onended=()=>{
+  pad.classList.remove("playing");
+  currentAudio=null;
+ };
+
+ a.play().catch(()=>{});
+}
+
+$("addBtn").onclick=()=>{
+ $("addDialog").showModal();
+};
+
+$("cancelAdd").onclick=()=>{
+ $("addDialog").close();
+};
+
+$("saveAdd").onclick=async()=>{
+
+ const file=$("audioFile").files[0];
+
+ if(!file){
+  alert("Bitte zuerst eine Audiodatei auswählen.");
+  return;
+ }
+
+ const url=URL.createObjectURL(file);
+
+ const audio=new Audio(url);
+
+ await new Promise(resolve=>{
+  audio.onloadedmetadata=resolve;
+ });
+
+ const sound={
+  id:crypto.randomUUID(),
+  name:$("soundName").value.trim()||
+   file.name.replace(/\.[^.]+$/,""),
+  icon:$("soundIcon").value.trim()||"🔊",
+  board:state.current,
+  blob:file,
+  duration:audio.duration,
+  start:0,
+  end:audio.duration,
+  volume:100,
+  loop:false
+ };
+
+ state.sounds.push(sound);
+
+ await saveSound(sound);
+ await saveMeta();
+
+ $("audioFile").value="";
+ $("soundName").value="";
+
+ $("addDialog").close();
+
+ render();
+};
+
+function openEditor(sound){
+
+ currentEdit=sound;
+
+ $("editTitle").textContent=
+  "Bearbeiten: "+sound.name;
+
+ $("editName").value=sound.name;
+
+ $("startRange").value=
+  Math.round(sound.start/sound.duration*100);
+
+ $("endRange").value=
+  Math.round(sound.end/sound.duration*100);
+
+ $("volumeRange").value=
+  sound.volume??100;
+
+ updateSelection();
+
+ $("editDialog").showModal();
+}
+
+function updateSelection(){
+
+ if(!currentEdit)return;
+
+ let start=+$("startRange").value;
+ let end=+$("endRange").value;
+
+ if(end<=start)
+  end=Math.min(100,start+1);
+
+ $("selection").style.left=start+"%";
+ $("selection").style.right=(100-end)+"%";
+}
+
+$("startRange").oninput=updateSelection;
+$("endRange").oninput=updateSelection;
+
+$("closeEdit").onclick=()=>{
+ $("editDialog").close();
+};
+
+$("previewBtn").onclick=()=>{
+
+ if(!currentEdit)return;
+
+ const start=
+  +$("startRange").value/100*
+  currentEdit.duration;
+
+ const end=
+  +$("endRange").value/100*
+  currentEdit.duration;
+
+ currentEdit.start=start;
+ currentEdit.end=Math.max(start+.05,end);
+ currentEdit.volume=+$("volumeRange").value;
+
+ playSound(
+  currentEdit,
+  {classList:{
+   add(){},
+   remove(){}
+  }}
+ );
+};
+
+$("saveEdit").onclick=async()=>{
+
+ if(!currentEdit)return;
+
+ const start=
+  +$("startRange").value/100*
+  currentEdit.duration;
+
+ let end=
+  +$("endRange").value/100*
+  currentEdit.duration;
+
+ if(end<=start)
+  end=Math.min(currentEdit.duration,start+.1);
+
+ currentEdit.start=start;
+ currentEdit.end=end;
+ currentEdit.volume=+$("volumeRange").value;
+
+ currentEdit.name=
+  $("editName").value.trim()||
+  currentEdit.name;
+
+ await saveSound(currentEdit);
+
+ $("editDialog").close();
+
+ render();
+};
+
+$("boardBtn").onclick=async()=>{
+
+ const name=prompt("Name des neuen Soundboards:");
+
+ if(!name||!name.trim())
+  return;
+
+ const clean=name.trim();
+
+ if(state.boards.includes(clean)){
+  alert("Dieses Board existiert bereits.");
+  return;
+ }
+
+ state.boards.push(clean);
+ state.current=clean;
+
+ await saveMeta();
+
+ render();
+};
+
+$("recordBtn").onclick=async()=>{
+
+ if(recorder){
+
+  recorder.stop();
+  return;
+ }
+
+ if(!navigator.mediaDevices||
+    !navigator.mediaDevices.getUserMedia){
+
+  alert("Dein Browser unterstützt keine Mikrofonaufnahme.");
+  return;
+ }
+
+ try{
+
+  const stream=
+   await navigator.mediaDevices.getUserMedia({
+    audio:true
+   });
+
+  recordedChunks=[];
+
+  recorder=new MediaRecorder(stream);
+
+  $("recordBtn").textContent=
+   "■ Aufnahme stoppen";
+
+  $("recordBtn").classList.add("recording");
+
+  recorder.ondataavailable=e=>{
+   if(e.data.size)
+    recordedChunks.push(e.data);
+  };
+
+  recorder.onstop=async()=>{
+
+   stream.getTracks().forEach(
+    track=>track.stop()
+   );
+
+   $("recordBtn").textContent=
+    "● Aufnahme";
+
+   $("recordBtn").classList.remove(
+    "recording"
+   );
+
+   const blob=new Blob(
+    recordedChunks,
+    {type:recorder.mimeType||"audio/webm"}
+   );
+
+   const url=URL.createObjectURL(blob);
+
+   const audio=new Audio(url);
+
+   await new Promise(resolve=>{
+    audio.onloadedmetadata=resolve;
+   });
+
+   const name=
+    prompt(
+     "Name für die Aufnahme:",
+     "Meine Aufnahme"
+    )||"Meine Aufnahme";
+
+   const sound={
+    id:crypto.randomUUID(),
+    name:name,
+    icon:"🎙️",
+    board:state.current,
+    blob:blob,
+    duration:audio.duration,
+    start:0,
+    end:audio.duration,
+    volume:100,
+    loop:false
+   };
+
+   state.sounds.push(sound);
+
+   await saveSound(sound);
+   await saveMeta();
+
+   render();
+
+   recorder=null;
+  };
+
+  recorder.start();
+
+ }catch(error){
+
+  alert(
+   "Der Zugriff auf das Mikrofon wurde nicht erlaubt."
+  );
+ }
+};
+
+async function init(){
+
+ try{
+
+  await openDB();
+
+  const meta=await getMeta();
+
+  if(meta){
+
+   state.boards=meta.boards||["Hauptboard"];
+   state.current=meta.current||state.boards[0];
+
+  }
+
+  state.sounds=await getSounds();
+
+  render();
+
+ }catch(error){
+
+  console.error(error);
+
+  alert(
+   "Der lokale Speicher konnte nicht geöffnet werden."
+  );
+ }
+}
+
+init();
+</script>
+
+</body>
+</html>
