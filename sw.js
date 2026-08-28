@@ -1,77 +1,78 @@
-const CACHE = "msb-v2";
+const CACHE = "msb-v4";
 
-const FILES = [
+const ASSETS = [
   "./",
   "./index.html",
   "./manifest.webmanifest"
 ];
 
-
-/* =========================================================
-   INSTALL
-========================================================= */
-
 self.addEventListener("install", event => {
 
   event.waitUntil(
 
-    caches.open(CACHE)
-      .then(cache => cache.addAll(FILES))
+    caches
+      .open(CACHE)
+      .then(cache => cache.addAll(ASSETS))
 
   );
 
-  /* Neue Version sofort aktivieren */
   self.skipWaiting();
 
 });
 
 
-/* =========================================================
-   AKTIVIEREN
-   Alte Caches löschen
-========================================================= */
-
 self.addEventListener("activate", event => {
 
   event.waitUntil(
 
-    caches.keys()
-      .then(keys => {
+    caches.keys().then(keys =>
 
-        return Promise.all(
+      Promise.all(
 
-          keys
-            .filter(key => key !== CACHE)
-            .map(key => caches.delete(key))
+        keys
+          .filter(key => key !== CACHE)
+          .map(key => caches.delete(key))
 
-        );
+      )
 
-      })
-      .then(() => self.clients.claim())
+    )
 
   );
+
+  self.clients.claim();
 
 });
 
 
-/* =========================================================
-   DATEIEN LADEN
-========================================================= */
-
 self.addEventListener("fetch", event => {
+
+  if(event.request.method !== "GET")
+    return;
 
   event.respondWith(
 
-    caches.match(event.request)
-      .then(cachedResponse => {
+    fetch(event.request)
 
-        if (cachedResponse) {
-          return cachedResponse;
-        }
+      .then(response => {
 
-        return fetch(event.request);
+        const copy =
+          response.clone();
+
+        caches.open(CACHE)
+          .then(cache =>
+            cache.put(
+              event.request,
+              copy
+            )
+          );
+
+        return response;
 
       })
+
+      .catch(() =>
+        caches.match(event.request)
+      )
 
   );
 
