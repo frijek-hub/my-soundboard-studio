@@ -1,479 +1,362 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="de">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport"
-      content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#0d0f12">
-
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Soundboard">
 <link rel="manifest" href="manifest.webmanifest">
-
 <title>My Soundboard Studio</title>
 
 <style>
-
 :root{
-  color-scheme:dark;
-  --bg:#0d0f12;
-  --panel:#181b21;
-  --panel2:#22262e;
-  --line:#343943;
-  --text:#f5f7fa;
-  --muted:#9da4b0;
-  --accent:#5b8cff;
-  --danger:#ff6262;
+ color-scheme:dark;
+ --bg:#0d0f12;
+ --p:#181b21;
+ --p2:#22262e;
+ --line:#343943;
+ --text:#f5f7fa;
+ --muted:#9da4b0;
+ --a:#5b8cff;
+ --red:#ff6262
 }
 
-*{
-  box-sizing:border-box;
-}
+*{box-sizing:border-box}
 
 body{
-  margin:0;
-  background:var(--bg);
-  color:var(--text);
-  font-family:-apple-system,BlinkMacSystemFont,
-  "SF Pro Display",Arial,sans-serif;
+ margin:0;
+ background:var(--bg);
+ color:var(--text);
+ font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display",Arial,sans-serif
 }
 
-button,
-input{
-  font:inherit;
-}
+button,input{font:inherit}
 
 button{
-  min-height:44px;
-  border:1px solid var(--line);
-  border-radius:12px;
-  background:var(--panel);
-  color:var(--text);
-  padding:10px 13px;
-  -webkit-tap-highlight-color:transparent;
-}
-
-button:active{
-  transform:scale(.98);
+ min-height:44px;
+ border:1px solid var(--line);
+ border-radius:13px;
+ background:var(--p);
+ color:var(--text);
+ padding:10px 14px
 }
 
 button.primary{
-  background:var(--accent);
-  border-color:var(--accent);
-  color:#fff;
-  font-weight:700;
-}
-
-button.danger{
-  color:var(--danger);
+ background:var(--a);
+ border-color:var(--a);
+ font-weight:700
 }
 
 header{
-  position:sticky;
-  top:0;
-  z-index:20;
-  padding:15px 14px;
-  background:rgba(13,15,18,.96);
-  backdrop-filter:blur(16px);
-  border-bottom:1px solid var(--line);
+ position:sticky;
+ top:0;
+ z-index:20;
+ padding:15px 14px;
+ background:rgba(13,15,18,.96);
+ backdrop-filter:blur(16px);
+ border-bottom:1px solid var(--line)
 }
 
 h1{
-  font-size:21px;
-  margin:0 0 12px;
+ font-size:21px;
+ margin:0 0 12px
 }
 
-.toolbar{
-  display:flex;
-  gap:8px;
-  overflow:auto;
+.toolbar,
+.boards{
+ display:flex;
+ gap:8px;
+ overflow:auto
+}
+
+.toolbar button,
+.boards button{
+ white-space:nowrap
 }
 
 main{
-  max-width:1000px;
-  margin:auto;
-  padding:14px 14px 80px;
+ max-width:1000px;
+ margin:auto;
+ padding:14px 14px 80px
 }
 
 .boards{
-  display:flex;
-  gap:8px;
-  overflow:auto;
-  margin-bottom:14px;
-}
-
-.board{
-  white-space:nowrap;
+ margin-bottom:14px
 }
 
 .board.active{
-  background:var(--panel2);
-  border-color:var(--accent);
+ border-color:var(--a);
+ background:var(--p2)
 }
 
 .grid{
-  display:grid;
-  grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:10px;
+ display:grid;
+ grid-template-columns:repeat(2,minmax(0,1fr));
+ gap:10px
 }
 
 .pad{
-  min-height:145px;
-  padding:15px;
-  text-align:left;
-  display:flex;
-  flex-direction:column;
-  justify-content:space-between;
-  overflow:hidden;
-  border:1px solid var(--line);
-  border-radius:16px;
-  background:var(--panel);
+ min-height:150px;
+ padding:15px;
+ border:1px solid var(--line);
+ border-radius:17px;
+ background:var(--p);
+ display:flex;
+ flex-direction:column;
+ justify-content:space-between
 }
 
 .pad strong{
-  font-size:17px;
+ font-size:18px
 }
 
 .pad small{
-  color:var(--muted);
+ color:var(--muted)
 }
 
-.pad-actions{
-  display:flex;
-  gap:6px;
-  margin-top:8px;
+.actions{
+ display:flex;
+ gap:7px;
+ margin-top:9px
 }
 
-.pad-actions button{
-  min-height:40px;
-  padding:7px 10px;
+.actions button{
+ flex:1
 }
 
 .playing{
-  outline:2px solid var(--accent);
+ outline:2px solid var(--a)
 }
 
 .empty{
-  text-align:center;
-  border:1px dashed var(--line);
-  border-radius:16px;
-  padding:35px 15px;
-  color:var(--muted);
+ text-align:center;
+ border:1px dashed var(--line);
+ border-radius:17px;
+ padding:40px 15px;
+ color:var(--muted)
 }
 
-.status{
-  text-align:center;
-  color:var(--muted);
-  font-size:13px;
-  margin-top:12px;
+#status{
+ text-align:center;
+ color:var(--muted);
+ font-size:13px;
+ min-height:20px;
+ margin-top:12px
 }
 
 dialog{
-  width:min(96vw,760px);
-  max-height:92vh;
-  overflow:auto;
-  background:var(--panel);
-  color:var(--text);
-  border:1px solid var(--line);
-  border-radius:20px;
-  padding:0;
+ width:min(96vw,760px);
+ max-height:92vh;
+ overflow:auto;
+ background:var(--p);
+ color:var(--text);
+ border:1px solid var(--line);
+ border-radius:20px;
+ padding:0
 }
 
 dialog::backdrop{
-  background:rgba(0,0,0,.76);
+ background:rgba(0,0,0,.78)
 }
 
 .modal{
-  padding:18px;
+ padding:18px
 }
 
 .modal h2{
-  margin:0 0 5px;
-  font-size:21px;
+ margin:0 0 5px
 }
 
-.subtitle{
-  color:var(--muted);
-  font-size:13px;
-  margin-bottom:15px;
+.sub,
+.note{
+ color:var(--muted);
+ font-size:13px;
+ line-height:1.45
 }
 
 .field{
-  margin:12px 0;
+ margin:13px 0
 }
 
 label{
-  display:block;
-  font-size:13px;
-  color:var(--muted);
-  margin-bottom:6px;
+ display:block;
+ color:var(--muted);
+ font-size:13px;
+ margin-bottom:6px
 }
 
 input[type=text],
 input[type=number],
 input[type=file]{
-  width:100%;
-  background:var(--bg);
-  border:1px solid var(--line);
-  color:var(--text);
-  border-radius:10px;
-  padding:11px;
-  font-size:16px;
+ width:100%;
+ background:var(--bg);
+ color:var(--text);
+ border:1px solid var(--line);
+ border-radius:11px;
+ padding:11px
 }
 
 input[type=range]{
-  width:100%;
+ width:100%
 }
 
 .row{
-  display:flex;
-  gap:8px;
-  flex-wrap:wrap;
+ display:flex;
+ gap:8px;
+ flex-wrap:wrap
 }
 
 .row>*{
-  flex:1;
+ flex:1
 }
 
-.time-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:10px;
+.wave{
+ position:relative;
+ background:#090b0e;
+ border:1px solid var(--line);
+ border-radius:15px;
+ overflow:hidden;
+ touch-action:none
 }
 
-.time-box{
-  background:var(--bg);
-  border:1px solid var(--line);
-  border-radius:13px;
-  padding:10px;
+.wave canvas{
+ display:block;
+ width:100%;
+ height:190px
 }
 
-.time-box input{
-  font-size:19px;
-  font-variant-numeric:tabular-nums;
-}
-
-.wave-wrap{
-  position:relative;
-  border:1px solid var(--line);
-  border-radius:15px;
-  background:#0a0c0f;
-  overflow:hidden;
-  touch-action:none;
-  user-select:none;
-  -webkit-user-select:none;
-}
-
-#waveCanvas{
-  display:block;
-  width:100%;
-  height:190px;
+.sel{
+ position:absolute;
+ top:0;
+ bottom:0;
+ background:rgba(91,140,255,.17);
+ pointer-events:none
 }
 
 .marker{
-  position:absolute;
-  top:0;
-  bottom:0;
-  width:30px;
-  margin-left:-15px;
-  z-index:5;
-  cursor:ew-resize;
-  touch-action:none;
+ position:absolute;
+ top:0;
+ bottom:0;
+ width:32px;
+ margin-left:-16px;
+ touch-action:none;
+ z-index:5
 }
 
-.marker::before{
-  content:"";
-  position:absolute;
-  left:13px;
-  top:0;
-  bottom:0;
-  width:3px;
-  background:var(--accent);
+.marker:before{
+ content:"";
+ position:absolute;
+ left:14px;
+ top:0;
+ bottom:0;
+ width:3px;
+ background:var(--a)
 }
 
-.marker::after{
-  content:"";
-  position:absolute;
-  left:4px;
-  top:5px;
-  width:21px;
-  height:21px;
-  border-radius:6px;
-  background:var(--accent);
+.marker:after{
+ content:"";
+ position:absolute;
+ left:5px;
+ top:5px;
+ width:21px;
+ height:21px;
+ border-radius:6px;
+ background:var(--a)
 }
 
-.marker.end::before{
-  background:#fff;
+.marker.end:before,
+.marker.end:after{
+ background:#fff
 }
 
-.marker.end::after{
-  background:#fff;
+.mlabel{
+ position:absolute;
+ top:32px;
+ left:50%;
+ transform:translateX(-50%);
+ background:#000d;
+ border:1px solid var(--line);
+ padding:4px 6px;
+ border-radius:7px;
+ font-size:11px;
+ white-space:nowrap
 }
 
-.marker-label{
-  position:absolute;
-  top:32px;
-  left:50%;
-  transform:translateX(-50%);
-  background:rgba(0,0,0,.82);
-  border:1px solid var(--line);
-  padding:4px 7px;
-  border-radius:7px;
-  font-size:11px;
-  white-space:nowrap;
-  font-variant-numeric:tabular-nums;
+.scale{
+ display:flex;
+ justify-content:space-between;
+ color:var(--muted);
+ font-size:11px;
+ padding:5px
 }
 
-.selection-fill{
-  position:absolute;
-  top:0;
-  bottom:0;
-  background:rgba(91,140,255,.17);
-  pointer-events:none;
-  z-index:2;
+.twocol{
+ display:grid;
+ grid-template-columns:1fr 1fr;
+ gap:10px
 }
 
-.wave-scale{
-  display:flex;
-  justify-content:space-between;
-  color:var(--muted);
-  font-size:11px;
-  padding:5px 2px;
-}
-
-.zoom-row{
-  display:grid;
-  grid-template-columns:auto 1fr auto;
-  gap:10px;
-  align-items:center;
-  margin:10px 0;
-}
-
-.zoom-row input{
-  margin:0;
-}
-
-.fine-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:10px;
+.box{
+ background:var(--bg);
+ border:1px solid var(--line);
+ border-radius:12px;
+ padding:10px
 }
 
 .fine{
-  background:var(--panel2);
-  border:1px solid var(--line);
-  border-radius:12px;
-  padding:9px;
+ display:grid;
+ grid-template-columns:1fr 1fr;
+ gap:8px;
+ margin-top:10px
 }
 
-.fine-title{
-  font-size:12px;
-  color:var(--muted);
-  margin-bottom:6px;
+.check{
+ display:flex;
+ align-items:center;
+ gap:9px;
+ margin:12px 0
 }
 
-.fine-buttons{
-  display:flex;
-  gap:6px;
-}
-
-.fine-buttons button{
-  flex:1;
-  min-height:40px;
-}
-
-.check-row{
-  display:flex;
-  align-items:center;
-  gap:9px;
-  padding:8px 0;
-}
-
-.check-row input{
-  width:20px;
-  height:20px;
-}
-
-.note{
-  font-size:12px;
-  line-height:1.45;
-  color:var(--muted);
-}
-
-.migration{
-  position:fixed;
-  inset:0;
-  z-index:100;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  background:rgba(0,0,0,.82);
-}
-
-.migration-box{
-  width:min(88vw,400px);
-  padding:24px;
-  border-radius:18px;
-  background:var(--panel);
-  border:1px solid var(--line);
-  text-align:center;
-}
-
-.spinner{
-  width:38px;
-  height:38px;
-  margin:0 auto 15px;
-  border:4px solid var(--line);
-  border-top-color:var(--accent);
-  border-radius:50%;
-  animation:spin .8s linear infinite;
-}
-
-@keyframes spin{
-  to{
-    transform:rotate(360deg);
-  }
+.check input{
+ width:20px;
+ height:20px
 }
 
 @media(min-width:700px){
-
-  .grid{
-    grid-template-columns:repeat(3,minmax(0,1fr));
-  }
-
+ .grid{
+  grid-template-columns:repeat(3,minmax(0,1fr))
+ }
 }
-
 </style>
 </head>
 
-
 <body>
-
 
 <header>
 
-<h1>
-🎛️ My Soundboard Studio
-</h1>
+<h1>🎛️ My Soundboard Studio</h1>
 
 <div class="toolbar">
 
-<button
-class="primary"
-id="addBtn">
+<button class="primary" id="add">
 ＋ Sound hinzufügen
 </button>
 
-<button
-id="recordBtn">
+<button id="record">
 ● Aufnahme
 </button>
 
-<button
-id="boardBtn">
+<button id="board">
 ＋ Board
 </button>
 
-<button
-id="stopBtn">
+<button id="backup">
+💾 Backup
+</button>
+
+<button id="stop">
 ■ Alles stoppen
 </button>
 
@@ -481,136 +364,75 @@ id="stopBtn">
 
 </header>
 
-
 <main>
 
-<div
-class="boards"
-id="boards">
-</div>
+<div class="boards" id="boards"></div>
 
-<div
-class="grid"
-id="grid">
-</div>
+<div class="grid" id="grid"></div>
 
-<div
-class="empty"
-id="empty">
-
+<div class="empty" id="empty">
 Noch keine Sounds vorhanden.
-
 <br><br>
-
-Importiere einen Sound
-oder nimm einen auf.
-
+Importiere einen Sound oder nimm einen auf.
 </div>
 
-<div
-class="status"
-id="status">
-</div>
+<div id="status"></div>
 
 </main>
 
 
-<!-- =====================================================
-     MIGRATION
-===================================================== -->
+<!-- SOUND HINZUFÜGEN -->
 
-<div
-class="migration"
-id="migration"
-style="display:none">
-
-<div class="migration-box">
-
-<div class="spinner"></div>
-
-<strong>
-Sounds werden vorbereitet…
-</strong>
-
-<p
-class="note">
-Deine vorhandenen Sounds werden auf das neue
-Speicherformat umgestellt.
-</p>
-
-</div>
-
-</div>
-
-
-<!-- =====================================================
-     SOUND HINZUFÜGEN
-===================================================== -->
-
-<dialog id="addDialog">
+<dialog id="addDlg">
 
 <div class="modal">
 
-<h2>
-Sound hinzufügen
-</h2>
+<h2>Sound hinzufügen</h2>
 
-<div class="subtitle">
-MP3, M4A, WAV, AAC, AIFF, CAF, OGG und weitere Formate.
-</div>
+<p class="sub">
+MP3, M4A, WAV und weitere Audioformate werden unterstützt.
+</p>
 
 <div class="field">
 
-<label>
-Audiodatei
-</label>
+<label>Audiodatei</label>
 
 <input
-id="audioFile"
-type="file"
-accept=".mp3,.m4a,.wav,.aac,.aiff,.aif,.caf,.ogg,.opus,audio/*"
->
+ id="file"
+ type="file"
+ accept="audio/*,.mp3,.m4a,.wav,.aac,.aiff,.caf,.ogg,.opus">
 
 </div>
 
 <div class="field">
 
-<label>
-Name
-</label>
+<label>Name</label>
 
 <input
-id="soundName"
-type="text"
-placeholder="z. B. Applaus"
->
+ id="name"
+ type="text"
+ placeholder="z. B. Applaus">
 
 </div>
 
 <div class="field">
 
-<label>
-Icon
-</label>
+<label>Icon</label>
 
 <input
-id="soundIcon"
-type="text"
-value="🔊"
->
+ id="icon"
+ type="text"
+ value="🔊">
 
 </div>
 
 <div class="row">
 
-<button
-id="cancelAdd">
+<button id="cancelAdd">
 Abbrechen
 </button>
 
-<button
-class="primary"
-id="saveAdd">
+<button class="primary" id="saveAdd">
 Speichern
 </button>
 
@@ -621,157 +443,101 @@ Speichern
 </dialog>
 
 
-<!-- =====================================================
-     EDITOR
-===================================================== -->
+<!-- AUDIO EDITOR -->
 
-<dialog id="editDialog">
+<dialog id="editDlg">
 
 <div class="modal">
 
 <h2 id="editTitle">
-✂️ Präziser Audio-Editor
+✂️ Audio bearbeiten
 </h2>
 
-<div class="subtitle">
-Start und Ende direkt in der Wellenform verschieben.
-Die Zeiten können auf die Millisekunde eingegeben werden.
-</div>
+<p class="sub">
+Ziehe die beiden Marker.
+Die Zeitfelder erlauben eine Genauigkeit von 1 Millisekunde.
+</p>
 
 
-<div
-class="wave-wrap"
-id="waveWrap">
+<div class="wave" id="wave">
 
-<canvas
-id="waveCanvas">
-</canvas>
+<canvas id="canvas"></canvas>
 
-<div
-class="selection-fill"
-id="selectionFill">
-</div>
+<div class="sel" id="sel"></div>
 
-<div
-class="marker"
-id="startMarker">
-
-<div
-class="marker-label"
-id="startLabel">
+<div class="marker" id="sm">
+<div class="mlabel" id="sl">
 00:00.000
 </div>
-
 </div>
 
-<div
-class="marker end"
-id="endMarker">
-
-<div
-class="marker-label"
-id="endLabel">
+<div class="marker end" id="em">
+<div class="mlabel" id="el">
 00:00.000
 </div>
-
 </div>
 
 </div>
 
 
-<div class="wave-scale">
+<div class="scale">
 
-<span id="scaleLeft">
-00:00.000
-</span>
-
-<span id="scaleMid">
-00:00.000
-</span>
-
-<span id="scaleRight">
-00:00.000
-</span>
+<span id="sc1"></span>
+<span id="sc2"></span>
+<span id="sc3"></span>
 
 </div>
 
 
-<div class="zoom-row">
+<div class="row">
 
-<span>
-🔍
-</span>
+<button id="minusZoom">
+−
+</button>
 
 <input
-id="zoomRange"
-type="range"
-min="1"
-max="8"
-step=".1"
-value="1"
->
+ id="zoom"
+ type="range"
+ min="1"
+ max="12"
+ step=".1"
+ value="1">
 
-<span id="zoomValue">
-1×
-</span>
+<button id="plusZoom">
+＋
+</button>
 
 </div>
 
 
-<div class="time-grid">
+<div class="twocol">
 
-<div class="time-box">
+<div class="box">
 
 <label>
-Start – Sekunden
+Start (Sekunden)
 </label>
 
 <input
-id="startTime"
-type="number"
-min="0"
-step=".001"
->
+ id="start"
+ type="number"
+ min="0"
+ step=".001">
 
 </div>
 
-<div class="time-box">
+
+<div class="box">
 
 <label>
-Ende – Sekunden
+Ende (Sekunden)
 </label>
 
 <input
-id="endTime"
-type="number"
-min="0"
-step=".001"
->
-
-</div>
-
-</div>
-
-
-<div class="fine-grid">
-
-<div class="fine">
-
-<div class="fine-title">
-Start fein einstellen
-</div>
-
-<div class="fine-buttons">
-
-<button
-data-start-step="-1">
-−0,1 s
-</button>
-
-<button
-data-start-step="1">
-+0,1 s
-</button>
+ id="end"
+ type="number"
+ min="0"
+ step=".001">
 
 </div>
 
@@ -780,46 +546,20 @@ data-start-step="1">
 
 <div class="fine">
 
-<div class="fine-title">
-Ende fein einstellen
-</div>
-
-<div class="fine-buttons">
-
-<button
-data-end-step="-1">
-−0,1 s
+<button id="sminus">
+Start −0,01 s
 </button>
 
-<button
-data-end-step="1">
-+0,1 s
+<button id="splus">
+Start +0,01 s
 </button>
 
-</div>
-
-</div>
-
-</div>
-
-
-<div
-class="row"
-style="margin-top:10px">
-
-<button
-id="previewBtn">
-▶ Auswahl abspielen
+<button id="eminus">
+Ende −0,01 s
 </button>
 
-<button
-id="playFromStartBtn">
-▶ Ab Start
-</button>
-
-<button
-id="stopPreviewBtn">
-■ Stop
+<button id="eplus">
+Ende +0,01 s
 </button>
 
 </div>
@@ -832,26 +572,20 @@ Lautstärke
 </label>
 
 <input
-id="volumeRange"
-type="range"
-min="0"
-max="100"
-value="100"
->
+ id="vol"
+ type="range"
+ min="0"
+ max="100"
+ value="100">
 
 </div>
 
 
-<label class="check-row">
+<label class="check">
 
-<input
-id="loopCheck"
-type="checkbox"
->
+<input id="loop" type="checkbox">
 
-<span>
 🔁 Auswahl wiederholen
-</span>
 
 </label>
 
@@ -862,50 +596,91 @@ type="checkbox"
 Name
 </label>
 
-<input
-id="editName"
-type="text"
->
+<input id="editName" type="text">
 
 </div>
 
 
 <div class="row">
 
-<button
-id="closeEdit">
+<button id="preview">
+▶ Auswahl
+</button>
+
+<button id="stopPreview">
+■ Stop
+</button>
+
+<button id="closeEdit">
 Schließen
 </button>
 
-<button
-id="saveEdit">
+<button id="saveEdit" class="primary">
 Speichern
 </button>
 
-<button
-class="primary"
-id="exportEdit">
-✂️ Als neuen Sound speichern
+<button id="newCut">
+✂️ Als neuen Sound
 </button>
 
 </div>
 
 
 <p class="note">
-
-<strong>Speichern:</strong>
-ändert den vorhandenen Sound.
-
-<br>
-
-<strong>Als neuen Sound speichern:</strong>
-erstellt eine neue WAV-Datei aus dem ausgewählten Bereich.
-
-<br><br>
-
-Die Originaldatei bleibt erhalten.
-
+„Als neuen Sound“ erstellt einen echten WAV-Ausschnitt.
+Der ursprüngliche Sound bleibt erhalten.
 </p>
+
+</div>
+
+</dialog>
+
+
+<!-- BACKUP -->
+
+<dialog id="backupDlg">
+
+<div class="modal">
+
+<h2>
+💾 Backup
+</h2>
+
+<p class="sub">
+Das Backup enthält deine Boards und Audiodateien.
+Damit kannst du deine Sounds später wiederherstellen.
+</p>
+
+<div class="field">
+
+<button class="primary" id="export">
+Backup exportieren
+</button>
+
+</div>
+
+
+<div class="field">
+
+<label>
+Backup wiederherstellen
+</label>
+
+<input
+ id="import"
+ type="file"
+ accept=".json,application/json">
+
+</div>
+
+
+<div class="row">
+
+<button id="closeBackup">
+Schließen
+</button>
+
+</div>
 
 </div>
 
@@ -914,2064 +689,1808 @@ Die Originaldatei bleibt erhalten.
 
 <script>
 
-
-/* =========================================================
-   DATENBANK
-========================================================= */
-
-const DB_NAME =
-"MySoundboardStudio";
-
-const DB_VERSION =
-3;
+const DB="MSB_STABLE_V4";
+const VER=1;
 
 let db;
 
-let state = {
-
-boards:[
-"Hauptboard"
-],
-
-current:
-"Hauptboard",
-
-sounds:[]
-
+let state={
+ boards:["Hauptboard"],
+ current:"Hauptboard",
+ sounds:[]
 };
 
-let currentEdit =
-null;
-
-let currentAudio =
-null;
-
-let recorder =
-null;
-
-let recordedChunks =
-[];
-
-let audioContext =
-null;
-
-let decodedBuffer =
-null;
-
-let dragTarget =
-null;
+let edit=null;
+let buf=null;
+let audio=null;
+let rec=null;
+let chunks=[];
+let drag=null;
+let ac=null;
 
 
-/* =========================================================
-   HILFSFUNKTION
-========================================================= */
-
-const $ =
-id =>
-document.getElementById(id);
+const $=x=>document.getElementById(x);
 
 
-/* =========================================================
-   DATABASE ÖFFNEN
-========================================================= */
+function dbOpen(){
 
-function openDB(){
+ return new Promise((ok,no)=>{
 
-return new Promise(
-(resolve,reject)=>{
+  let r=indexedDB.open(DB,VER);
 
-const request =
-indexedDB.open(
-DB_NAME,
-DB_VERSION
-);
+  r.onupgradeneeded=()=>{
 
+   let d=r.result;
 
-request.onupgradeneeded =
-event => {
+   if(!d.objectStoreNames.contains("meta"))
+    d.createObjectStore("meta",{keyPath:"key"});
 
-const d =
-request.result;
+   if(!d.objectStoreNames.contains("sounds"))
+    d.createObjectStore("sounds",{keyPath:"id"});
 
+  };
 
-/*
-   Bestehende Datenbanken werden NICHT gelöscht.
-*/
+  r.onsuccess=()=>{
+   db=r.result;
+   ok();
+  };
 
-if(
-!d.objectStoreNames
-.contains("meta")
-){
+  r.onerror=()=>no(r.error);
 
-d.createObjectStore(
-"meta",
-{
-keyPath:"key"
-}
-);
+ });
 
 }
 
 
-if(
-!d.objectStoreNames
-.contains("sounds")
-){
+function meta(){
 
-d.createObjectStore(
-"sounds",
-{
-keyPath:"id"
-}
-);
+ return new Promise((ok,no)=>{
 
-}
+  let r=db
+   .transaction("meta")
+   .objectStore("meta")
+   .get("state");
 
-};
+  r.onsuccess=()=>ok(r.result);
 
+  r.onerror=()=>no(r.error);
 
-request.onsuccess =
-()=>{
-
-db =
-request.result;
-
-resolve();
-
-};
-
-
-request.onerror =
-()=>{
-
-reject(
-request.error
-);
-
-};
-
-});
+ });
 
 }
 
-
-/* =========================================================
-   META LADEN
-========================================================= */
-
-function getMeta(){
-
-return new Promise(
-(resolve,reject)=>{
-
-const request =
-db
-.transaction("meta")
-.objectStore("meta")
-.get("state");
-
-
-request.onsuccess =
-()=>resolve(
-request.result
-);
-
-
-request.onerror =
-()=>reject(
-request.error
-);
-
-});
-
-}
-
-
-/* =========================================================
-   META SPEICHERN
-========================================================= */
 
 function saveMeta(){
 
-return new Promise(
-(resolve,reject)=>{
+ return new Promise((ok,no)=>{
 
-const request =
-db
-.transaction(
-"meta",
-"readwrite"
-)
-.objectStore("meta")
-.put({
+  let r=db
+   .transaction("meta","readwrite")
+   .objectStore("meta")
+   .put({
+    key:"state",
+    boards:state.boards,
+    current:state.current
+   });
 
-key:
-"state",
+  r.onsuccess=ok;
 
-boards:
-state.boards,
+  r.onerror=()=>no(r.error);
 
-current:
-state.current
-
-});
-
-
-request.onsuccess =
-()=>resolve();
-
-
-request.onerror =
-()=>reject(
-request.error
-);
-
-});
+ });
 
 }
 
 
-/* =========================================================
-   SOUNDS LADEN
-========================================================= */
+function all(){
 
-function getSounds(){
+ return new Promise((ok,no)=>{
 
-return new Promise(
-(resolve,reject)=>{
+  let r=db
+   .transaction("sounds")
+   .objectStore("sounds")
+   .getAll();
 
-const request =
-db
-.transaction("sounds")
-.objectStore("sounds")
-.getAll();
+  r.onsuccess=()=>ok(r.result);
 
+  r.onerror=()=>no(r.error);
 
-request.onsuccess =
-()=>resolve(
-request.result
-);
-
-
-request.onerror =
-()=>reject(
-request.error
-);
-
-});
+ });
 
 }
 
 
-/* =========================================================
-   SOUND SPEICHERN
-========================================================= */
+function put(s){
 
-function saveSound(sound){
+ return new Promise((ok,no)=>{
 
-return new Promise(
-(resolve,reject)=>{
+  let r=db
+   .transaction("sounds","readwrite")
+   .objectStore("sounds")
+   .put(s);
 
-const request =
-db
-.transaction(
-"sounds",
-"readwrite"
-)
-.objectStore("sounds")
-.put(sound);
+  r.onsuccess=ok;
 
+  r.onerror=()=>no(r.error);
 
-request.onsuccess =
-()=>resolve();
-
-
-request.onerror =
-()=>reject(
-request.error
-);
-
-});
+ });
 
 }
 
 
-/* =========================================================
-   SOUND LÖSCHEN
-========================================================= */
+function del(id){
 
-function deleteSound(id){
+ return new Promise((ok,no)=>{
 
-return new Promise(
-(resolve,reject)=>{
+  let r=db
+   .transaction("sounds","readwrite")
+   .objectStore("sounds")
+   .delete(id);
 
-const request =
-db
-.transaction(
-"sounds",
-"readwrite"
-)
-.objectStore("sounds")
-.delete(id);
+  r.onsuccess=ok;
 
+  r.onerror=()=>no(r.error);
 
-request.onsuccess =
-()=>resolve();
-
-
-request.onerror =
-()=>reject(
-request.error
-);
-
-});
+ });
 
 }
 
 
-/* =========================================================
-   ALTE SOUNDS MIGRIEREN
-========================================================= */
+function esc(x){
 
-async function migrateSounds(sounds){
-
-let changed =
-false;
-
-$("migration")
-.style.display =
-"flex";
-
-
-for(
-let i=0;
-i<sounds.length;
-i++
-){
-
-const sound =
-sounds[i];
-
-
-/*
-   Bereits neues Format
-*/
-
-if(
-sound.audioData
-){
-
-continue;
+ return String(x).replace(
+  /[&<>"']/g,
+  c=>({
+   "&":"&amp;",
+   "<":"&lt;",
+   ">":"&gt;",
+   '"':"&quot;",
+   "'":"&#39;"
+  }[c])
+ );
 
 }
 
 
-/*
-   Altes Format mit Blob
-*/
+function fmt(x){
 
-if(
-sound.blob &&
-typeof sound.blob.arrayBuffer ===
-"function"
-){
+ x=Math.max(0,Number(x)||0);
 
-try{
+ let m=Math.floor(x/60);
 
-const arrayBuffer =
-await sound.blob.arrayBuffer();
+ let s=Math.floor(x%60);
 
+ let ms=Math.floor(
+  (x-Math.floor(x))*1000
+ );
 
-sound.audioData =
-arrayBuffer;
-
-
-/*
-   Blob entfernen.
-
-   Dadurch vermeiden wir eine doppelte
-   Speicherung der Audiodatei.
-*/
-
-delete sound.blob;
-
-delete sound.url;
-
-
-await saveSound(
-sound
-);
-
-
-changed =
-true;
-
-}
-catch(error){
-
-console.error(
-"Migration fehlgeschlagen:",
-error
-);
-
-}
-
-}
+ return String(m).padStart(2,"0")
+  +":"
+  +String(s).padStart(2,"0")
+  +"."
+  +String(ms).padStart(3,"0");
 
 }
 
 
-$("migration")
-.style.display =
-"none";
+function bytes(s){
 
-
-return {
-sounds,
-changed
-};
+ return new Blob(
+  [s.data],
+  {type:s.type||"audio/mpeg"}
+ );
 
 }
 
 
-/* =========================================================
-   BLOB AUS GESPEICHERTEN DATEN
-========================================================= */
+function url(s){
 
-function getBlob(sound){
+ if(!s.url)
+  s.url=URL.createObjectURL(bytes(s));
 
-if(
-!sound ||
-!sound.audioData
-){
-
-return null;
+ return s.url;
 
 }
 
 
-let type =
-sound.mimeType ||
-"audio/mpeg";
+function status(t){
 
-
-/*
-   ArrayBuffer
-*/
-
-if(
-sound.audioData instanceof
-ArrayBuffer
-){
-
-return new Blob(
-[
-sound.audioData
-],
-{
-type:type
-}
-);
+ $("status").textContent=t||"";
 
 }
 
-
-/*
-   Uint8Array
-*/
-
-if(
-sound.audioData instanceof
-Uint8Array
-){
-
-return new Blob(
-[
-sound.audioData.buffer
-],
-{
-type:type
-}
-);
-
-}
-
-
-return null;
-
-}
-
-
-/* =========================================================
-   AUDIO URL ERZEUGEN
-========================================================= */
-
-function makeURL(sound){
-
-if(
-sound.url
-){
-
-return sound.url;
-
-}
-
-
-const blob =
-getBlob(sound);
-
-
-if(
-!blob
-){
-
-return null;
-
-}
-
-
-sound.url =
-URL.createObjectURL(
-blob
-);
-
-
-return sound.url;
-
-}
-
-
-/* =========================================================
-   ESCAPEN
-========================================================= */
-
-function esc(value){
-
-return String(value)
-.replace(
-/[&<>"']/g,
-c=>({
-
-"&":"&amp;",
-"<":"&lt;",
-">":"&gt;",
-'"':"&quot;",
-"'":"&#39;"
-
-}[c])
-);
-
-}
-
-
-/* =========================================================
-   ZEIT FORMAT
-========================================================= */
-
-function fmt(seconds){
-
-if(
-!isFinite(seconds)
-)
-return "00:00.000";
-
-
-seconds =
-Math.max(
-0,
-seconds
-);
-
-
-const minutes =
-Math.floor(
-seconds/60
-);
-
-
-const sec =
-Math.floor(
-seconds%60
-);
-
-
-const ms =
-Math.floor(
-(
-seconds -
-Math.floor(seconds)
-)
-*1000
-);
-
-
-return (
-
-String(minutes)
-.padStart(2,"0")
-
-+
-
-":"
-
-+
-
-String(sec)
-.padStart(2,"0")
-
-+
-
-"."
-
-+
-
-String(ms)
-.padStart(3,"0")
-
-);
-
-}
-
-
-/* =========================================================
-   STATUS
-========================================================= */
-
-function setStatus(message){
-
-$("status")
-.textContent =
-message ||
-"";
-
-}
-
-
-/* =========================================================
-   RENDER
-========================================================= */
 
 function render(){
 
-$("boards")
-.innerHTML =
-"";
+ let bs=$("boards");
+
+ bs.innerHTML="";
+
+ state.boards.forEach(b=>{
+
+  let x=document.createElement("button");
+
+  x.textContent=b;
+
+  x.className=
+   "board "
+   +(b===state.current?"active":"");
+
+  x.onclick=async()=>{
+
+   state.current=b;
+
+   await saveMeta();
+
+   render();
+
+  };
+
+  bs.appendChild(x);
+
+ });
 
 
-state.boards
-.forEach(
-board=>{
+ let g=$("grid");
 
-const button =
-document.createElement(
-"button"
-);
+ g.innerHTML="";
 
 
-button.className =
-"board"
-+
-(
-board ===
-state.current
-?
-" active"
-:
-""
-);
+ let list=state.sounds.filter(
+  s=>s.board===state.current
+ );
 
 
-button.textContent =
-board;
+ $("empty").style.display=
+  list.length?"none":"block";
 
 
-button.onclick =
-async()=>{
+ list.forEach(s=>{
 
-state.current =
-board;
+  let p=document.createElement("div");
 
-await saveMeta();
+  p.className="pad";
 
-render();
+
+  p.innerHTML=`
+
+   <div>
+
+    <div style="font-size:30px">
+     ${esc(s.icon||"🔊")}
+    </div>
+
+    <strong>
+     ${esc(s.name)}
+    </strong>
+
+   </div>
+
+   <div>
+
+    <small>
+     ${fmt((s.end??s.duration)-(s.start||0))}
+    </small>
+
+    <div class="actions">
+
+     <button data-p>
+      ▶
+     </button>
+
+     <button data-e>
+      ✎
+     </button>
+
+     <button data-d>
+      🗑
+     </button>
+
+    </div>
+
+   </div>
+  `;
+
+
+  p.querySelector("[data-p]")
+   .onclick=()=>play(s,p);
+
+
+  p.querySelector("[data-e]")
+   .onclick=()=>openEdit(s);
+
+
+  p.querySelector("[data-d]")
+   .onclick=async()=>{
+
+    if(
+     confirm(
+      "Diesen Sound wirklich löschen?"
+     )
+    ){
+
+     stop();
+
+     await del(s.id);
+
+     state.sounds=
+      state.sounds.filter(
+       x=>x.id!==s.id
+      );
+
+     render();
+
+    }
+
+  };
+
+
+  g.appendChild(p);
+
+ });
+
+}
+
+
+function stop(){
+
+ if(audio){
+
+  audio.pause();
+
+  audio=null;
+
+ }
+
+ document
+  .querySelectorAll(".playing")
+  .forEach(
+   x=>x.classList.remove("playing")
+  );
+
+}
+
+
+function play(s,p){
+
+ stop();
+
+ let a=new Audio(url(s));
+
+ audio=a;
+
+ a.volume=
+  (s.volume??100)/100;
+
+ a.currentTime=
+  s.start||0;
+
+ p.classList.add("playing");
+
+
+ a.ontimeupdate=()=>{
+
+  if(
+   a.currentTime>=
+   (s.end??s.duration)
+  ){
+
+   if(s.loop){
+
+    a.currentTime=
+     s.start||0;
+
+    a.play().catch(()=>{});
+
+   }else{
+
+    a.pause();
+
+    p.classList.remove("playing");
+
+    audio=null;
+
+   }
+
+  }
+
+ };
+
+
+ a.onended=()=>{
+
+  p.classList.remove("playing");
+
+  audio=null;
+
+ };
+
+
+ a.play().catch(()=>{});
+
+}
+
+
+$("add").onclick=()=>
+ $("addDlg").showModal();
+
+
+$("cancelAdd").onclick=()=>
+ $("addDlg").close();
+
+
+$("saveAdd").onclick=async()=>{
+
+ let f=$("file").files[0];
+
+ if(!f)
+  return alert(
+   "Bitte eine Audiodatei auswählen."
+  );
+
+
+ let data=
+  await f.arrayBuffer();
+
+
+ let u=
+  URL.createObjectURL(f);
+
+
+ let a=new Audio(u);
+
+
+ try{
+
+  await new Promise((r,j)=>{
+
+   a.onloadedmetadata=r;
+
+   a.onerror=j;
+
+  });
+
+
+  let s={
+
+   id:crypto.randomUUID(),
+
+   name:
+    $("name").value.trim()
+    ||
+    f.name.replace(/\.[^.]+$/,""),
+
+   icon:
+    $("icon").value.trim()
+    ||
+    "🔊",
+
+   board:
+    state.current,
+
+   data,
+
+   type:
+    f.type||"audio/mpeg",
+
+   duration:
+    a.duration,
+
+   start:0,
+
+   end:
+    a.duration,
+
+   volume:100,
+
+   loop:false
+
+  };
+
+
+  await put(s);
+
+  state.sounds.push(s);
+
+  await saveMeta();
+
+
+  $("file").value="";
+
+  $("name").value="";
+
+  $("addDlg").close();
+
+  render();
+
+  status("✓ Sound gespeichert.");
+
+  URL.revokeObjectURL(u);
+
+ }catch(e){
+
+  alert(
+   "Die Audiodatei konnte nicht gelesen werden."
+  );
+
+ }
 
 };
 
 
-$("boards")
-.appendChild(
-button
-);
+async function decode(s){
 
-});
+ if(!ac)
 
+  ac=
+   new(
+    window.AudioContext||
+    window.webkitAudioContext
+   )();
 
-$("grid")
-.innerHTML =
-"";
+ if(ac.state==="suspended")
+  await ac.resume();
 
+ return ac.decodeAudioData(
+  (
+   await bytes(s).arrayBuffer()
+  ).slice(0)
+ );
 
-const list =
-state.sounds.filter(
-sound =>
-sound.board ===
-state.current
-);
-
-
-$("empty")
-.style.display =
-list.length
-?
-"none"
-:
-"block";
+}
 
 
-list.forEach(
-sound=>{
+function range(){
 
-const pad =
-document.createElement(
-"div"
-);
+ let d=buf.duration;
 
+ let z=+$("zoom").value;
 
-pad.className =
-"pad";
+ let v=d/z;
 
+ let c=(edit.start+edit.end)/2;
 
-pad.innerHTML = `
+ let l=Math.max(
+  0,
+  Math.min(
+   d-v,
+   c-v/2
+  )
+ );
 
-<div>
+ return [l,l+v];
 
-<div
-style="
-font-size:29px;
-margin-bottom:6px;
-">
-
-${esc(
-sound.icon ||
-"🔊"
-)}
-
-</div>
-
-<strong>
-${esc(sound.name)}
-</strong>
-
-</div>
+}
 
 
-<div>
+function tx(t){
 
-<small>
-${fmt(
-(sound.end ??
-sound.duration)
--
-(sound.start ||
-0)
-)}
-</small>
+ let r=range();
 
+ return(
+  (t-r[0])/
+  (r[1]-r[0])
+ )*$("wave").clientWidth;
 
-<div
-class="pad-actions"
->
-
-<button data-play>
-▶
-</button>
-
-<button data-edit>
-✎
-</button>
-
-<button data-delete>
-🗑
-</button>
-
-</div>
-
-</div>
-
-`;
+}
 
 
-pad.querySelector(
-"[data-play]"
-)
-.onclick =
-()=>playSound(
-sound,
-pad
-);
+function xt(x){
+
+ let r=range();
+
+ return r[0]+
+  Math.max(
+   0,
+   Math.min(
+    $("wave").clientWidth,
+    x
+   )
+  )/
+  $("wave").clientWidth*
+  (r[1]-r[0]);
+
+}
 
 
-pad.querySelector(
-"[data-edit]"
-)
-.onclick =
-()=>openEditor(
-sound
-);
+function visual(){
+
+ let w=
+  $("wave").clientWidth;
+
+ let s=
+  Math.max(
+   0,
+   Math.min(
+    w,
+    tx(edit.start)
+   )
+  );
+
+ let e=
+  Math.max(
+   0,
+   Math.min(
+    w,
+    tx(edit.end)
+   )
+  );
 
 
-pad.querySelector(
-"[data-delete]"
-)
-.onclick =
-async()=>{
+ $("sm").style.left=s+"px";
 
-if(
-!confirm(
-"Diesen Sound wirklich löschen?"
-)
-)
-return;
+ $("em").style.left=e+"px";
+
+ $("sel").style.left=s+"px";
+
+ $("sel").style.width=
+  Math.max(0,e-s)+"px";
 
 
-stopAudio();
+ $("sl").textContent=
+  fmt(edit.start);
+
+ $("el").textContent=
+  fmt(edit.end);
 
 
-state.sounds =
-state.sounds.filter(
-x =>
-x.id !==
-sound.id
-);
+ $("start").value=
+  edit.start.toFixed(3);
+
+ $("end").value=
+  edit.end.toFixed(3);
 
 
-await deleteSound(
-sound.id
-);
+ let r=range();
+
+ $("sc1").textContent=
+  fmt(r[0]);
+
+ $("sc2").textContent=
+  fmt(
+   (r[0]+r[1])/2
+  );
+
+ $("sc3").textContent=
+  fmt(r[1]);
+
+}
 
 
-render();
+function draw(){
+
+ let c=$("canvas");
+
+ let w=$("wave");
+
+ let d=devicePixelRatio||1;
+
+ c.width=
+  w.clientWidth*d;
+
+ c.height=
+  190*d;
+
+
+ let x=c.getContext("2d");
+
+ x.clearRect(
+  0,
+  0,
+  c.width,
+  c.height
+ );
+
+
+ if(!buf)
+  return;
+
+
+ let data=
+  buf.getChannelData(0);
+
+
+ let step=
+  Math.max(
+   1,
+   Math.floor(
+    data.length/
+    (c.width/(+$("zoom").value))
+   )
+  );
+
+
+ x.strokeStyle="#8e97a6";
+
+ x.lineWidth=d;
+
+
+ for(
+  let i=0;
+  i<c.width;
+  i++
+ ){
+
+  let st=
+   Math.min(
+    data.length-1,
+    Math.floor(i*step)
+   );
+
+  let en=
+   Math.min(
+    data.length,
+    st+step
+   );
+
+
+  let mn=1;
+
+  let mx=-1;
+
+
+  for(
+   let j=st;
+   j<en;
+   j++
+  ){
+
+   mn=Math.min(
+    mn,
+    data[j]
+   );
+
+   mx=Math.max(
+    mx,
+    data[j]
+   );
+
+  }
+
+
+  let mid=
+   c.height/2;
+
+
+  x.beginPath();
+
+  x.moveTo(
+   i,
+   mid+mn*mid*.9
+  );
+
+  x.lineTo(
+   i,
+   mid+mx*mid*.9
+  );
+
+  x.stroke();
+
+ }
+
+
+ visual();
+
+}
+
+
+function clamp(){
+
+ edit.start=
+  Math.max(
+   0,
+   Math.min(
+    edit.start,
+    buf.duration
+   )
+  );
+
+
+ edit.end=
+  Math.max(
+   edit.start+.001,
+   Math.min(
+    edit.end,
+    buf.duration
+   )
+  );
+
+
+ visual();
+
+}
+
+
+async function openEdit(s){
+
+ stop();
+
+ edit=s;
+
+ $("editTitle").textContent=
+  "✂️ "+s.name;
+
+ $("editName").value=
+  s.name;
+
+ $("vol").value=
+  s.volume??100;
+
+ $("loop").checked=
+  !!s.loop;
+
+ $("zoom").value=1;
+
+ $("editDlg").showModal();
+
+
+ try{
+
+  buf=await decode(s);
+
+  edit.duration=
+   buf.duration;
+
+  edit.start=
+   Math.max(
+    0,
+    s.start||0
+   );
+
+  edit.end=
+   Math.min(
+    buf.duration,
+    s.end??buf.duration
+   );
+
+  clamp();
+
+  draw();
+
+ }catch(e){
+
+  $("editDlg").close();
+
+  alert(
+   "Audio konnte nicht geladen werden."
+  );
+
+ }
+
+}
+
+
+function preview(){
+
+ if(!edit)
+  return;
+
+ stop();
+
+ let a=
+  new Audio(url(edit));
+
+ a.volume=
+  +$("vol").value/100;
+
+ a.currentTime=
+  edit.start;
+
+ audio=a;
+
+
+ a.ontimeupdate=()=>{
+
+  if(
+   a.currentTime>=edit.end
+  ){
+
+   if(
+    $("loop").checked
+   ){
+
+    a.currentTime=
+     edit.start;
+
+    a.play().catch(()=>{});
+
+   }else{
+
+    a.pause();
+
+    audio=null;
+
+   }
+
+  }
+
+ };
+
+
+ a.play().catch(()=>{});
+
+}
+
+
+$("zoom").oninput=()=>draw();
+
+
+$("minusZoom").onclick=()=>{
+
+ $("zoom").value=
+  Math.max(
+   1,
+   +$("zoom").value-.5
+  );
+
+ draw();
 
 };
 
 
-$("grid")
-.appendChild(
-pad
-);
+$("plusZoom").onclick=()=>{
 
-});
+ $("zoom").value=
+  Math.min(
+   12,
+   +$("zoom").value+.5
+  );
 
-}
-
-
-/* =========================================================
-   AUDIO STOPPEN
-========================================================= */
-
-function stopAudio(){
-
-if(
-currentAudio
-){
-
-try{
-currentAudio.pause();
-}
-catch(e){}
-
-try{
-currentAudio.currentTime =
-0;
-}
-catch(e){}
-
-currentAudio =
-null;
-
-}
-
-
-document
-.querySelectorAll(
-".playing"
-)
-.forEach(
-element =>
-element.classList
-.remove(
-"playing"
-)
-);
-
-}
-
-
-/* =========================================================
-   SOUND ABSPIELEN
-========================================================= */
-
-function playSound(
-sound,
-pad
-){
-
-stopAudio();
-
-
-const url =
-makeURL(
-sound
-);
-
-
-if(
-!url
-){
-
-alert(
-"Die Audiodatei konnte nicht geladen werden."
-);
-
-return;
-
-}
-
-
-const audio =
-new Audio();
-
-
-audio.src =
-url;
-
-audio.preload =
-"auto";
-
-audio.volume =
-(
-sound.volume ??
-100
-)/100;
-
-
-currentAudio =
-audio;
-
-
-const start =
-Math.max(
-0,
-sound.start ||
-0
-);
-
-
-const end =
-Math.min(
-sound.duration,
-sound.end ??
-sound.duration
-);
-
-
-audio.currentTime =
-start;
-
-
-if(
-pad &&
-pad.classList
-){
-
-pad.classList.add(
-"playing"
-);
-
-}
-
-
-audio.ontimeupdate =
-()=>{
-
-if(
-audio.currentTime >=
-end
-){
-
-if(
-sound.loop
-){
-
-audio.currentTime =
-start;
-
-audio.play()
-.catch(
-()=>{}
-);
-
-}
-else{
-
-audio.pause();
-
-if(
-pad &&
-pad.classList
-){
-
-pad.classList
-.remove(
-"playing"
-);
-
-}
-
-currentAudio =
-null;
-
-}
-
-}
+ draw();
 
 };
 
 
-audio.onended =
-()=>{
+$("start").onchange=()=>{
 
-if(
-pad &&
-pad.classList
-){
+ edit.start=
+  parseFloat(
+   $("start").value
+  )||0;
 
-pad.classList
-.remove(
-"playing"
-);
-
-}
-
-currentAudio =
-null;
+ clamp();
 
 };
 
 
-audio.onerror =
-error=>{
+$("end").onchange=()=>{
 
-console.error(
-"Audio-Fehler:",
-error
-);
+ edit.end=
+  parseFloat(
+   $("end").value
+  )||0;
 
-if(
-pad &&
-pad.classList
-){
-
-pad.classList
-.remove(
-"playing"
-);
-
-}
-
-currentAudio =
-null;
-
-alert(
-"Dieser Sound konnte nicht abgespielt werden."
-);
+ clamp();
 
 };
 
 
-audio.play()
-.catch(
-error=>{
+$("sminus").onclick=()=>{
+ edit.start-=.01;
+ clamp();
+};
 
-console.error(
-"Play-Fehler:",
-error
-);
 
-});
+$("splus").onclick=()=>{
+ edit.start+=.01;
+ clamp();
+};
 
-}
 
+$("eminus").onclick=()=>{
+ edit.end-=.01;
+ clamp();
+};
 
-/* =========================================================
-   AUDIO DEKODIEREN
-========================================================= */
 
-async function decodeSound(sound){
+$("eplus").onclick=()=>{
+ edit.end+=.01;
+ clamp();
+};
 
-if(
-!audioContext
-){
 
-audioContext =
-new (
-window.AudioContext ||
-window.webkitAudioContext
-)();
+$("preview").onclick=
+ preview;
 
-}
 
+$("stopPreview").onclick=
+ stop;
 
-const blob =
-getBlob(
-sound
-);
 
+$("vol").oninput=()=>
+ edit.volume=
+  +$("vol").value;
 
-if(
-!blob
-){
 
-throw new Error(
-"Audiodaten fehlen."
-);
+$("loop").onchange=()=>
+ edit.loop=
+  $("loop").checked;
 
-}
 
+$("closeEdit").onclick=()=>{
 
-const arrayBuffer =
-await blob.arrayBuffer();
+ $("editDlg").close();
 
+ stop();
 
-return await audioContext
-.decodeAudioData(
-arrayBuffer.slice(0)
-);
+ edit=null;
 
-}
-
-
-/* =========================================================
-   WAVEFORM
-========================================================= */
-
-function drawWaveform(){
-
-const canvas =
-$("waveCanvas");
-
-const wrap =
-$("waveWrap");
-
-
-const rect =
-wrap.getBoundingClientRect();
-
-
-const dpr =
-window.devicePixelRatio ||
-1;
-
-
-canvas.width =
-Math.max(
-1,
-Math.floor(
-rect.width*dpr
-)
-);
-
-
-canvas.height =
-190*dpr;
-
-
-const ctx =
-canvas.getContext(
-"2d"
-);
-
-
-ctx.clearRect(
-0,
-0,
-canvas.width,
-canvas.height
-);
-
-
-if(
-!decodedBuffer
-)
-return;
-
-
-const data =
-decodedBuffer
-.getChannelData(0);
-
-
-const zoom =
-+$("zoomRange").value;
-
-
-const visible =
-Math.max(
-1,
-Math.floor(
-data.length/zoom
-)
-);
-
-
-const mid =
-canvas.height/2;
-
-
-const step =
-Math.max(
-1,
-Math.floor(
-visible/
-canvas.width
-)
-);
-
-
-ctx.strokeStyle =
-"#8e97a6";
-
-ctx.lineWidth =
-Math.max(
-1,
-dpr
-);
-
-
-for(
-let x=0;
-x<canvas.width;
-x++
-){
-
-const start =
-Math.min(
-data.length-1,
-Math.floor(
-x*step
-)
-);
-
-
-const end =
-Math.min(
-data.length,
-start+step
-);
-
-
-let min =
-1;
-
-let max =
--1;
-
-
-for(
-let i=start;
-i<end;
-i++
-){
-
-const value =
-data[i];
-
-
-if(
-value<min
-)
-min =
-value;
-
-
-if(
-value>max
-)
-max =
-value;
-
-}
-
-
-ctx.beginPath();
-
-ctx.moveTo(
-x,
-mid+
-min*
-mid*
-.9
-);
-
-ctx.lineTo(
-x,
-mid+
-max*
-mid*
-.9
-);
-
-ctx.stroke();
-
-}
-
-
-ctx.strokeStyle =
-"rgba(255,255,255,.12)";
-
-
-ctx.beginPath();
-
-ctx.moveTo(
-0,
-mid
-);
-
-ctx.lineTo(
-canvas.width,
-mid
-);
-
-ctx.stroke();
-
-
-updateEditorVisuals();
-
-}
-
-
-/* =========================================================
-   SICHTBARER BEREICH
-========================================================= */
-
-function visibleTimeRange(){
-
-if(
-!decodedBuffer
-){
-
-return [
-0,
-1
-];
-
-}
-
-
-const zoom =
-+$("zoomRange").value;
-
-
-const duration =
-decodedBuffer.duration;
-
-
-const visible =
-duration/
-zoom;
-
-
-let center =
-(
-currentEdit.start+
-currentEdit.end
-)/
-2;
-
-
-if(
-!isFinite(center)
-){
-
-center =
-duration/2;
-
-}
-
-
-let left =
-center-
-visible/2;
-
-
-left =
-Math.max(
-0,
-Math.min(
-duration-visible,
-left
-)
-);
-
-
-return [
-left,
-left+visible
-];
-
-}
-
-
-/* =========================================================
-   TIME → X
-========================================================= */
-
-function timeToX(time){
-
-const [
-left,
-right
-] =
-visibleTimeRange();
-
-
-return (
-
-(time-left)/
-(right-left)
-)
-*
-$("waveWrap")
-.clientWidth;
-
-}
-
-
-/* =========================================================
-   X → TIME
-========================================================= */
-
-function xToTime(x){
-
-const [
-left,
-right
-] =
-visibleTimeRange();
-
-
-const width =
-$("waveWrap")
-.clientWidth;
-
-
-return (
-
-left+
-(
-Math.max(
-0,
-Math.min(
-width,
-x
-)
-)/
-width
-)
-*
-(
-right-left
-)
-
-);
-
-}
-
-
-/* =========================================================
-   EDITOR VISUALS
-========================================================= */
-
-function updateEditorVisuals(){
-
-if(
-!currentEdit ||
-!decodedBuffer
-)
-return;
-
-
-const width =
-$("waveWrap")
-.clientWidth;
-
-
-const startX =
-timeToX(
-currentEdit.start
-);
-
-
-const endX =
-timeToX(
-currentEdit.end
-);
-
-
-$("startMarker")
-.style.left =
-Math.max(
-0,
-Math.min(
-width,
-startX
-)
-)
-+
-"px";
-
-
-$("endMarker")
-.style.left =
-Math.max(
-0,
-Math.min(
-width,
-endX
-)
-)
-+
-"px";
-
-
-$("selectionFill")
-.style.left =
-Math.max(
-0,
-startX
-)
-+
-"px";
-
-
-$("selectionFill")
-.style.width =
-Math.max(
-0,
-endX-startX
-)
-+
-"px";
-
-
-$("startLabel")
-.textContent =
-fmt(
-currentEdit.start
-);
-
-
-$("endLabel")
-.textContent =
-fmt(
-currentEdit.end
-);
-
-
-$("startTime")
-.value =
-currentEdit.start
-.toFixed(3);
-
-
-$("endTime")
-.value =
-currentEdit.end
-.toFixed(3);
-
-
-const [
-left,
-right
-] =
-visibleTimeRange();
-
-
-$("scaleLeft")
-.textContent =
-fmt(left);
-
-
-$("scaleMid")
-.textContent =
-fmt(
-(left+right)/2
-);
-
-
-$("scaleRight")
-.textContent =
-fmt(right);
-
-}
-
-
-/* =========================================================
-   CLAMP
-========================================================= */
-
-function clampEdit(){
-
-if(
-!currentEdit ||
-!decodedBuffer
-)
-return;
-
-
-const duration =
-decodedBuffer.duration;
-
-
-currentEdit.start =
-Math.max(
-0,
-Math.min(
-currentEdit.start,
-duration
-)
-);
-
-
-currentEdit.end =
-Math.max(
-0,
-Math.min(
-currentEdit.end,
-duration
-)
-);
-
-
-if(
-currentEdit.end <=
-currentEdit.start
-){
-
-currentEdit.end =
-Math.min(
-duration,
-currentEdit.start+
-.001
-);
-
-}
-
-
-updateEditorVisuals();
-
-}
-
-
-/* =========================================================
-   EDITOR ÖFFNEN
-========================================================= */
-
-async function openEditor(
-sound
-){
-
-stopAudio();
-
-
-currentEdit =
-sound;
-
-
-$("editTitle")
-.textContent =
-"✂️ "+sound.name;
-
-
-$("editName")
-.value =
-sound.name;
-
-
-$("volumeRange")
-.value =
-sound.volume ??
-100;
-
-
-$("loopCheck")
-.checked =
-!!sound.loop;
-
-
-$("zoomRange")
-.value =
-1;
-
-
-$("zoomValue")
-.textContent =
-"1×";
-
-
-$("editDialog")
-.showModal();
-
-
-setStatus(
-"Wellenform wird geladen…"
-);
-
-
-try{
-
-decodedBuffer =
-await decodeSound(
-sound
-);
-
-
-currentEdit.duration =
-decodedBuffer.duration;
-
-
-if(
-!isFinite(
-currentEdit.start
-)
-){
-
-currentEdit.start =
-0;
-
-}
-
-
-if(
-!isFinite(
-currentEdit.end
-) ||
-currentEdit.end<=0
-){
-
-currentEdit.end =
-decodedBuffer.duration;
-
-}
-
-
-currentEdit.end =
-Math.min(
-currentEdit.end,
-decodedBuffer.duration
-);
-
-
-clampEdit();
-
-drawWaveform();
-
-setStatus("");
-
-}
-catch(error){
-
-console.error(
-error
-);
-
-decodedBuffer =
-null;
-
-alert(
-"Die Audiodatei konnte nicht geladen werden."
-);
-
-}
-
-}
-
-
-/* =========================================================
-   FEINEINSTELLUNG
-========================================================= */
-
-function changeStart(
-delta
-){
-
-if(
-!currentEdit
-)
-return;
-
-
-currentEdit.start +=
-delta;
-
-
-clampEdit();
-
-}
-
-
-function changeEnd(
-delta
-){
-
-if(
-!currentEdit
-)
-return;
-
-
-currentEdit.end +=
-delta;
-
-
-clampEdit();
-
-}
-
-
-/* =========================================================
-   AUSWAHL ABSPIELEN
-========================================================= */
-
-function playEditorSelection(){
-
-if(
-!currentEdit
-)
-return;
-
-
-stopAudio();
-
-
-const url =
-makeURL(
-currentEdit
-);
-
-
-if(
-!url
-)
-return;
-
-
-const audio =
-new Audio();
-
-
-audio.src =
-url;
-
-audio.volume =
-+$("volumeRange")
-.value/100;
-
-audio.currentTime =
-currentEdit.start;
-
-
-currentAudio =
-audio;
-
-
-audio.ontimeupdate =
-()=>{
-
-if(
-audio.currentTime >=
-currentEdit.end
-){
-
-if(
-$("loopCheck")
-.checked
-){
-
-audio.currentTime =
-currentEdit.start;
-
-audio.play()
-.catch(
-()=>{}
-);
-
-}
-else{
-
-audio.pause();
-
-currentAudio =
-null;
-
-}
-
-}
+ buf=null;
 
 };
 
 
-audio.play()
-.catch(
-()=>{}
-);
+$("saveEdit").onclick=async()=>{
 
-}
+ if(!edit)
+  return;
 
 
-/* =========================================================
-   AB START
-========================================================= */
-
-function playEditorFromStart(){
-
-if(
-!currentEdit
-)
-return;
+ edit.name=
+  $("editName").value.trim()
+  ||
+  edit.name;
 
 
-stopAudio();
+ edit.volume=
+  +$("vol").value;
+
+ edit.loop=
+  $("loop").checked;
 
 
-const url =
-makeURL(
-currentEdit
-);
+ await put(edit);
 
+ $("editDlg").close();
 
-if(
-!url
-)
-return;
+ edit=null;
 
+ buf=null;
 
-const audio =
-new Audio();
+ render();
 
-
-audio.src =
-url;
-
-audio.volume =
-+$("volumeRange")
-.value/100;
-
-audio.currentTime =
-currentEdit.start;
-
-
-currentAudio =
-audio;
-
-
-audio.ontimeupdate =
-()=>{
-
-if(
-audio.currentTime >=
-currentEdit.end
-){
-
-audio.pause();
-
-currentAudio =
-null;
-
-}
+ status(
+  "✓ Änderungen gespeichert."
+ );
 
 };
 
 
-audio.play()
-.catch(
-()=>{}
-);
+function wav(
+ b,
+ start,
+ end,
+ gain
+){
+
+ let rate=
+  b.sampleRate;
+
+ let ch=
+  b.numberOfChannels;
+
+ let ss=
+  Math.floor(
+   start*rate
+  );
+
+ let ee=
+  Math.ceil(
+   end*rate
+  );
+
+ let n=
+  Math.max(
+   1,
+   ee-ss
+  );
+
+ let data=
+  n*ch*2;
+
+ let ab=
+  new ArrayBuffer(
+   44+data
+  );
+
+ let v=
+  new DataView(ab);
+
+
+ let w=(o,s)=>{
+
+  for(
+   let i=0;
+   i<s.length;
+   i++
+  )
+
+   v.setUint8(
+    o+i,
+    s.charCodeAt(i)
+   );
+
+ };
+
+
+ w(0,"RIFF");
+
+ v.setUint32(
+  4,
+  36+data,
+  true
+ );
+
+ w(8,"WAVE");
+
+ w(12,"fmt ");
+
+ v.setUint32(
+  16,
+  16,
+  true
+ );
+
+ v.setUint16(
+  20,
+  1,
+  true
+ );
+
+ v.setUint16(
+  22,
+  ch,
+  true
+ );
+
+ v.setUint32(
+  24,
+  rate,
+  true
+ );
+
+ v.setUint32(
+  28,
+  rate*ch*2,
+  true
+ );
+
+ v.setUint16(
+  32,
+  ch*2,
+  true
+ );
+
+ v.setUint16(
+  34,
+  16,
+  true
+ );
+
+ w(36,"data");
+
+ v.setUint32(
+  40,
+  data,
+  true
+ );
+
+
+ let o=44;
+
+
+ for(
+  let i=0;
+  i<n;
+  i++
+ ){
+
+  for(
+   let c=0;
+   c<ch;
+   c++
+  ){
+
+   let q=
+    Math.max(
+     -1,
+     Math.min(
+      1,
+      b.getChannelData(c)
+       [ss+i]*gain
+     )
+    );
+
+
+   v.setInt16(
+    o,
+    q<0
+     ?q*32768
+     :q*32767,
+    true
+   );
+
+   o+=2;
+
+  }
+
+ }
+
+
+ return new Blob(
+  [ab],
+  {type:"audio/wav"}
+ );
 
 }
 
 
-/* =========================================================
-   WAV ENCODIEREN
-========================================================= */
+$("newCut").onclick=async()=>{
 
-function encodeWav(
-buffer,
-start,
-end,
-volume
-){
-
-const rate =
-buffer.sampleRate;
+ if(!edit||!buf)
+  return;
 
 
-const startSample =
-Math.max(
-0,
-Math.floor(
-start*rate
+ let b=
+  wav(
+   buf,
+   edit.start,
+   edit.end,
+   +$("vol").value/100
+  );
+
+
+ let data=
+  await b.arrayBuffer();
+
+
+ let d=
+  edit.end-edit.start;
+
+
+ let s={
+
+  id:crypto.randomUUID(),
+
+  name:
+   (
+    $("editName")
+     .value.trim()
+    ||
+    edit.name
+   )+
+   " (Schnitt)",
+
+  icon:
+   edit.icon||"🔊",
+
+  board:
+   state.current,
+
+  data,
+
+  type:"audio/wav",
+
+  duration:d,
+
+  start:0,
+
+  end:d,
+
+  volume:100,
+
+  loop:
+   $("loop").checked
+
+ };
+
+
+ await put(s);
+
+ state.sounds.push(s);
+
+
+ $("editDlg").close();
+
+ edit=null;
+
+ buf=null;
+
+ render();
+
+ status(
+  "✓ Neuer Zuschnitt gespeichert."
+ );
+
+};
+
+
+function pointer(type,e){
+
+ e.preventDefault();
+
+ drag=type;
+
+ move(e);
+
+}
+
+
+function move(e){
+
+ if(!drag||!buf)
+  return;
+
+ let r=
+  $("wave").getBoundingClientRect();
+
+ let t=
+  xt(
+   e.clientX-r.left
+  );
+
+
+ if(drag==="s")
+
+  edit.start=
+   Math.min(
+    t,
+    edit.end-.001
+   );
+
+ else
+
+  edit.end=
+   Math.max(
+    t,
+    edit.start+.001
+   );
+
+
+ clamp();
+
+}
+
+
+$("sm").onpointerdown=
+ e=>pointer("s",e);
+
+
+$("em").onpointerdown=
+ e=>pointer("e",e);
+
+
+window.onpointermove=
+ move;
+
+
+window.onpointerup=
+ ()=>drag=null;
+
+
+window.onresize=
+ ()=>buf&&draw();
+
+
+$("board").onclick=async()=>{
+
+ let n=
+  prompt(
+   "Name des neuen Soundboards:"
+  );
+
+
+ if(!n?.trim())
+  return;
+
+
+ n=n.trim();
+
+
+ if(
+  state.boards.includes(n)
+ )
+  return alert(
+   "Dieses Board existiert bereits."
+  );
+
+
+ state.boards.push(n);
+
+ state.current=n;
+
+ await saveMeta();
+
+ render();
+
+};
+
+
+$("stop").onclick=
+ stop;
+
+
+$("record").onclick=async()=>{
+
+ if(rec){
+
+  rec.stop();
+
+  return;
+
+ }
+
+
+ try{
+
+  let stream=
+   await navigator
+    .mediaDevices
+    .getUserMedia({
+     audio:true
+    });
+
+
+  chunks=[];
+
+
+  rec=
+   new MediaRecorder(stream);
+
+
+  $("record").textContent=
+   "■ Aufnahme stoppen";
+
+
+  status(
+   "🔴 Aufnahme läuft…"
+  );
+
+
+  rec.ondataavailable=e=>{
+
+   if(e.data.size)
+    chunks.push(e.data);
+
+  };
+
+
+  rec.onstop=async()=>{
+
+   stream
+    .getTracks()
+    .forEach(
+     t=>t.stop()
+    );
+
+
+   $("record").textContent=
+    "● Aufnahme";
+
+
+   let b=
+    new Blob(
+     chunks,
+     {
+      type:
+       rec.mimeType||
+       "audio/webm"
+     }
+    );
+
+
+   let data=
+    await b.arrayBuffer();
+
+
+   let u=
+    URL.createObjectURL(b);
+
+
+   let a=
+    new Audio(u);
+
+
+   await new Promise(
+    (r,j)=>{
+     a.onloadedmetadata=r;
+     a.onerror=j;
+    }
+   );
+
+
+   let n=
+    prompt(
+     "Name für die Aufnahme:",
+     "Meine Aufnahme"
+    )
+    ||
+    "Meine Aufnahme";
+
+
+   let s={
+
+    id:crypto.randomUUID(),
+
+    name:n,
+
+    icon:"🎙️",
+
+    board:
+     state.current,
+
+    data,
+
+    type:b.type,
+
+    duration:
+     a.duration,
+
+    start:0,
+
+    end:a.duration,
+
+    volume:100,
+
+    loop:false
+
+   };
+
+
+   await put(s);
+
+   state.sounds.push(s);
+
+   render();
+
+   status(
+    "✓ Aufnahme gespeichert."
+   );
+
+
+   URL.revokeObjectURL(u);
+
+   rec=null;
+
+  };
+
+
+  rec.start();
+
+
+ }catch(e){
+
+  alert(
+   "Mikrofonzugriff wurde nicht erlaubt."
+  );
+
+  rec=null;
+
+  $("record").textContent=
+   "● Aufnahme";
+
+ }
+
+};
+
+
+$("backup").onclick=()=>
+ $("backupDlg").showModal();
+
+
+$("closeBackup").onclick=()=>
+ $("backupDlg").close();
+
+
+$("export").onclick=()=>{
+
+ let p={
+
+  format:
+   "MySoundboardStudio",
+
+  version:1,
+
+  boards:
+   state.boards,
+
+  current:
+   state.current,
+
+  sounds:
+   state.sounds.map(
+    s=>({
+     ...s,
+     data:
+      Array.from(
+       new Uint8Array(s.data)
+      )
+    })
+   )
+
+ };
+
+
+ let b=
+  new Blob(
+   [JSON.stringify(p)],
+   {
+    type:
+     "application/json"
+   }
+  );
+
+
+ let u=
+  URL.createObjectURL(b);
+
+
+ let a=
+  document.createElement("a");
+
+
+ a.href=u;
+
+ a.download=
+  "my-soundboard-backup.json";
+
+ a.click();
+
+
+ URL.revokeObjectURL(u);
+
+ status(
+  "✓ Backup erstellt."
+ );
+
+};
+
+
+$("import").onchange=
+ async()=>{
+
+  let f=
+   $("import").files[0];
+
+  if(!f)
+   return;
+
+
+  try{
+
+   let p=
+    JSON.parse(
+     await f.text()
+    );
+
+
+   if(
+    p.format!==
+    "MySoundboardStudio"
+   )
+    throw 0;
+
+
+   for(
+    let s of p.sounds
+   ){
+
+    s.data=
+     new Uint8Array(
+      s.data
+     ).buffer;
+
+    delete s.url;
+
+    await put(s);
+
+    state.sounds=
+     state.sounds.filter(
+      x=>x.id!==s.id
+     );
+
+    state.sounds.push(s);
+
+   }
+
+
+   for(
+    let b of p.boards||[]
+   )
+
+    if(
+     !state.boards.includes(b)
+    )
+
+     state.boards.push(b);
+
+
+   if(
+    state.boards.includes(
+     p.current
+    )
+   )
+
+    state.current=
+     p.current;
+
+
+   await saveMeta();
+
+   render();
+
+   $("backupDlg").close();
+
+   status(
+    "✓ Backup wiederhergestellt."
+   );
+
+
+  }catch(e){
+
+   alert(
+    "Ungültiges oder beschädigtes Backup."
+   );
+
+  }
+
+ };
+
+
+(async()=>{
+
+ try{
+
+  await dbOpen();
+
+  let m=
+   await meta();
+
+
+  if(m){
+
+   state.boards=
+    m.boards||
+    ["Hauptboard"];
+
+   state.current=
+    m.current||
+    state.boards[0];
+
+  }
+
+
+  state.sounds=
+   await all();
+
+
+  render();
+
+
+ }catch(e){
+
+  console.error(e);
+
+  alert(
+   "Lokaler Speicher konnte nicht geöffnet werden."
+  );
+
+ }
+
+})();
+
+
+if(
+ "serviceWorker"
+ in navigator
 )
-);
 
+ navigator
+  .serviceWorker
+  .register("./sw.js")
+  .catch(console.error);
 
-const endSample =
-Math.min(
-buffer.length,
-Math.ceil(
-end*rate
-)
-);
+</script>
 
-
-const length =
-Math.max(
-1,
-endSample-
-startSample
-);
-
-
-const channels =
-buffer.numberOfChannels;
-
-
-const bytesPerSample =
-2;
-
-
-const blockAlign =
-channels*
-bytesPerSample;
-
-
-const dataSize =
-length*
-blockAlign;
-
-
-const arrayBuffer =
-new ArrayBuffer(
-44+
-dataSize
-);
-
-
-const view =
-new DataView(
-arrayBuffer
-);
-
-
-function writeString(
-offset,
+</body>
+</html>
