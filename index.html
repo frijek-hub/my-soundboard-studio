@@ -2,30 +2,17 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-
-<meta name="viewport"
-      content="width=device-width,
-      initial-scale=1,
-      viewport-fit=cover">
-
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#0d0f12">
-
-<meta name="apple-mobile-web-app-capable"
-      content="yes">
-
-<meta name="apple-mobile-web-app-status-bar-style"
-      content="black-translucent">
-
-<meta name="apple-mobile-web-app-title"
-      content="Soundboard">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Soundboard">
 
 <title>My Soundboard Studio</title>
 
 <style>
-
 :root{
   color-scheme:dark;
-
   --bg:#0d0f12;
   --panel:#181b21;
   --panel2:#22262e;
@@ -33,7 +20,6 @@
   --text:#f5f7fa;
   --muted:#9da4b0;
   --accent:#5b8cff;
-  --danger:#ff5c5c;
 }
 
 *{
@@ -41,19 +27,12 @@
   -webkit-tap-highlight-color:transparent;
 }
 
-html,
-body{
+html,body{
   margin:0;
   min-height:100%;
   background:var(--bg);
   color:var(--text);
-
-  font-family:
-    -apple-system,
-    BlinkMacSystemFont,
-    "SF Pro Display",
-    Arial,
-    sans-serif;
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display",Arial,sans-serif;
 }
 
 body{
@@ -63,16 +42,12 @@ body{
 button{
   appearance:none;
   -webkit-appearance:none;
-
   border:1px solid var(--line);
   border-radius:14px;
-
   background:var(--panel);
   color:var(--text);
-
   padding:12px 16px;
   min-height:48px;
-
   font-size:16px;
   font-weight:500;
 }
@@ -84,44 +59,33 @@ button:active{
 button.primary{
   background:var(--accent);
   border-color:var(--accent);
-  color:white;
+  color:#fff;
   font-weight:700;
 }
-
-
-/* HEADER */
 
 header{
   position:sticky;
   top:0;
   z-index:20;
-
   padding:
     calc(14px + env(safe-area-inset-top))
     14px
     14px;
-
-  background:rgba(13,15,18,.94);
-
+  background:rgba(13,15,18,.95);
   backdrop-filter:blur(18px);
   -webkit-backdrop-filter:blur(18px);
-
   border-bottom:1px solid var(--line);
 }
 
 h1{
   margin:0 0 14px;
-
   font-size:25px;
-  line-height:1.15;
 }
 
 .toolbar{
   display:flex;
   gap:9px;
-
   overflow-x:auto;
-
   scrollbar-width:none;
 }
 
@@ -133,32 +97,18 @@ h1{
   flex:0 0 auto;
 }
 
-
-/* MAIN */
-
 main{
   width:100%;
   max-width:1100px;
-
   margin:auto;
-
-  padding:
-    16px
-    14px
-    80px;
+  padding:16px 14px 80px;
 }
-
-
-/* BOARDS */
 
 .boards{
   display:flex;
   gap:9px;
-
   overflow-x:auto;
-
   margin-bottom:16px;
-
   scrollbar-width:none;
 }
 
@@ -174,68 +124,39 @@ main{
 .board.active{
   background:var(--panel2);
   border-color:var(--accent);
-
-  box-shadow:
-    0 0 0 1px
-    rgba(91,140,255,.15);
 }
-
-
-/* GRID */
 
 .grid{
   display:grid;
-
-  grid-template-columns:
-    repeat(2,minmax(0,1fr));
-
+  grid-template-columns:repeat(2,minmax(0,1fr));
   gap:12px;
 }
 
 @media(min-width:700px){
-
   .grid{
-    grid-template-columns:
-      repeat(3,minmax(0,1fr));
+    grid-template-columns:repeat(3,minmax(0,1fr));
   }
-
 }
 
 @media(min-width:1000px){
-
   .grid{
-    grid-template-columns:
-      repeat(4,minmax(0,1fr));
+    grid-template-columns:repeat(4,minmax(0,1fr));
   }
-
 }
-
-
-/* SOUND CARD */
 
 .pad{
   min-height:205px;
-
   padding:16px;
-
-  border:
-    1px solid var(--line);
-
+  border:1px solid var(--line);
   border-radius:22px;
-
   background:var(--panel);
-
   display:flex;
   flex-direction:column;
   justify-content:space-between;
-
   overflow:hidden;
-
   user-select:none;
   -webkit-user-select:none;
-
   cursor:pointer;
-
   transition:
     transform .08s ease,
     border-color .12s ease,
@@ -247,122 +168,68 @@ main{
 }
 
 .pad.playing{
-
   border-color:var(--accent);
-
   box-shadow:
-    0 0 0 2px
-    rgba(91,140,255,.28),
-
-    0 8px 30px
-    rgba(91,140,255,.15);
+    0 0 0 2px rgba(91,140,255,.28),
+    0 8px 30px rgba(91,140,255,.15);
 }
 
 .pad-icon{
   font-size:38px;
   line-height:1;
-
   margin-bottom:12px;
 }
 
 .pad-name{
   font-size:20px;
   font-weight:700;
-
   line-height:1.2;
-
   word-break:break-word;
 }
 
 .pad-time{
   margin-top:7px;
-
   color:var(--muted);
-
   font-size:15px;
-
-  font-variant-numeric:
-    tabular-nums;
+  font-variant-numeric:tabular-nums;
 }
 
 .pad-actions{
   display:flex;
-
   gap:8px;
-
   margin-top:14px;
 }
 
 .pad-actions button{
-
   flex:1;
-
   min-height:43px;
-
   padding:7px 8px;
-
   font-size:18px;
 }
 
-.pad-actions button[data-delete]{
-  color:#ffb0b0;
-}
-
-
-/* EMPTY */
-
 .empty{
-
   text-align:center;
-
-  border:
-    1px dashed var(--line);
-
+  border:1px dashed var(--line);
   border-radius:20px;
-
   padding:45px 20px;
-
   color:var(--muted);
-
   line-height:1.7;
 }
 
-
-/* STATUS */
-
 .status{
-
   position:fixed;
-
   left:50%;
-
-  bottom:
-    calc(
-      20px +
-      env(safe-area-inset-bottom)
-    );
-
+  bottom:calc(20px + env(safe-area-inset-bottom));
   transform:translateX(-50%);
-
   z-index:100;
-
   background:#252a33;
-
-  border:
-    1px solid var(--line);
-
+  border:1px solid var(--line);
   padding:10px 15px;
-
   border-radius:999px;
-
   color:var(--text);
-
   font-size:14px;
-
   opacity:0;
-
   pointer-events:none;
-
   transition:opacity .2s;
 }
 
@@ -370,53 +237,31 @@ main{
   opacity:1;
 }
 
-
-/* DIALOG */
-
 dialog{
-
   width:min(94vw,760px);
-
   max-height:92vh;
-
   margin:auto;
-
   padding:0;
-
-  border:
-    1px solid var(--line);
-
+  border:1px solid var(--line);
   border-radius:22px;
-
   background:var(--panel);
-
   color:var(--text);
-
   overflow:hidden;
 }
 
 dialog::backdrop{
-
-  background:
-    rgba(0,0,0,.75);
-
+  background:rgba(0,0,0,.75);
   backdrop-filter:blur(4px);
 }
 
 .modal{
-
   padding:20px;
-
   max-height:92vh;
-
   overflow-y:auto;
 }
 
 .modal h2{
-
-  margin:
-    0 0 20px;
-
+  margin:0 0 20px;
   font-size:24px;
 }
 
@@ -425,32 +270,20 @@ dialog::backdrop{
 }
 
 label{
-
   display:block;
-
   margin-bottom:8px;
-
   color:var(--muted);
-
   font-size:14px;
 }
 
 input[type=text],
 input[type=file]{
-
   width:100%;
-
   padding:13px;
-
   border-radius:12px;
-
-  border:
-    1px solid var(--line);
-
+  border:1px solid var(--line);
   background:var(--bg);
-
   color:var(--text);
-
   font-size:16px;
 }
 
@@ -459,42 +292,27 @@ input[type=file]{
 }
 
 input[type=range]{
-
   width:100%;
-
   accent-color:var(--accent);
 }
 
 .range-row{
-
   display:grid;
-
-  grid-template-columns:
-    1fr 1fr;
-
+  grid-template-columns:1fr 1fr;
   gap:14px;
 }
 
 .range-value{
-
   color:var(--text);
-
   font-size:14px;
-
   text-align:right;
-
   margin-top:5px;
-
-  font-variant-numeric:
-    tabular-nums;
+  font-variant-numeric:tabular-nums;
 }
 
 .row{
-
   display:flex;
-
   gap:9px;
-
   flex-wrap:wrap;
 }
 
@@ -502,98 +320,57 @@ input[type=range]{
   flex:1;
 }
 
-
-/* WAVEFORM */
-
-.wave-wrap{
-  margin:
-    8px 0 20px;
-}
-
 .wave{
-
   position:relative;
-
-  height:160px;
-
+  height:170px;
   border-radius:15px;
-
   overflow:hidden;
-
   background:#11141a;
-
-  border:
-    1px solid var(--line);
+  border:1px solid var(--line);
 }
 
 #waveCanvas{
-
   width:100%;
   height:100%;
-
   display:block;
 }
 
 .selection{
-
   position:absolute;
-
   top:0;
   bottom:0;
-
-  background:
-    rgba(91,140,255,.23);
-
-  border-left:
-    3px solid var(--accent);
-
-  border-right:
-    3px solid var(--accent);
-
+  background:rgba(91,140,255,.23);
+  border-left:3px solid var(--accent);
+  border-right:3px solid var(--accent);
   pointer-events:none;
 }
 
-.note{
-
-  color:var(--muted);
-
-  font-size:13px;
-
-  line-height:1.5;
-
-  margin-top:16px;
-}
-
-.recording{
-
-  color:#ff6262 !important;
-
-  border-color:#ff6262 !important;
-}
-
 .checkbox{
-
   display:flex;
-
   align-items:center;
-
   gap:10px;
-
   margin:15px 0;
 }
 
 .checkbox input{
-
   width:20px;
   height:20px;
 }
 
+.note{
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.5;
+}
+
+.recording{
+  color:#ff6262!important;
+  border-color:#ff6262!important;
+}
+
 @media(max-width:450px){
-
   .pad{
-
     min-height:190px;
-
     padding:14px;
   }
 
@@ -608,43 +385,32 @@ input[type=range]{
   h1{
     font-size:23px;
   }
-
 }
-
 </style>
 </head>
 
-
 <body>
-
 
 <header>
 
-<h1>
-🎛️ My Soundboard Studio
-</h1>
+<h1>🎛️ My Soundboard Studio</h1>
 
 <div class="toolbar">
 
-<button
-  class="primary"
-  id="addBtn">
-  ＋ Sound hinzufügen
+<button class="primary" id="addBtn">
+＋ Sound hinzufügen
 </button>
 
-<button
-  id="recordBtn">
-  ● Aufnahme
+<button id="recordBtn">
+● Aufnahme
 </button>
 
-<button
-  id="boardBtn">
-  ＋ Board
+<button id="boardBtn">
+＋ Board
 </button>
 
-<button
-  id="stopAllBtn">
-  ■ Alle stoppen
+<button id="stopAllBtn">
+■ Alle stoppen
 </button>
 
 </div>
@@ -654,52 +420,34 @@ input[type=range]{
 
 <main>
 
-<div
-  class="boards"
-  id="boards">
-</div>
+<div class="boards" id="boards"></div>
 
-<div
-  class="grid"
-  id="grid">
-</div>
+<div class="grid" id="grid"></div>
 
-<div
-  class="empty"
-  id="empty">
-
+<div class="empty" id="empty">
 Noch keine Sounds vorhanden.<br>
-
-Importiere einen Sound
-oder nimm einen auf.
-
+Importiere einen Sound oder nimm einen auf.
 </div>
 
 </main>
 
 
-<div
-  class="status"
-  id="status">
-</div>
+<div class="status" id="status"></div>
 
 
-<!-- SOUND HINZUFÜGEN -->
+<!-- =====================================================
+     SOUND HINZUFÜGEN
+===================================================== -->
 
 <dialog id="addDialog">
 
 <div class="modal">
 
-<h2>
-🔊 Sound hinzufügen
-</h2>
-
+<h2>🔊 Sound hinzufügen</h2>
 
 <div class="field">
 
-<label>
-Audiodatei auswählen
-</label>
+<label>Audiodatei auswählen</label>
 
 <input
   id="audioFile"
@@ -711,9 +459,7 @@ Audiodatei auswählen
 
 <div class="field">
 
-<label>
-Name
-</label>
+<label>Name</label>
 
 <input
   id="soundName"
@@ -725,9 +471,7 @@ Name
 
 <div class="field">
 
-<label>
-Icon
-</label>
+<label>Icon</label>
 
 <input
   id="soundIcon"
@@ -739,15 +483,12 @@ Icon
 
 <div class="row">
 
-<button
-  id="cancelAdd">
-  Abbrechen
+<button id="cancelAdd">
+Abbrechen
 </button>
 
-<button
-  class="primary"
-  id="saveAdd">
-  Speichern
+<button class="primary" id="saveAdd">
+Speichern
 </button>
 
 </div>
@@ -757,27 +498,22 @@ Icon
 </dialog>
 
 
-<!-- BEARBEITEN -->
+<!-- =====================================================
+     EDITOR
+===================================================== -->
 
 <dialog id="editDialog">
 
 <div class="modal">
-
 
 <h2 id="editTitle">
 Sound bearbeiten
 </h2>
 
 
-<div class="wave-wrap">
+<div class="wave">
 
-<div
-  class="wave"
-  id="wave">
-
-<canvas
-  id="waveCanvas">
-</canvas>
+<canvas id="waveCanvas"></canvas>
 
 <div
   class="selection"
@@ -786,17 +522,12 @@ Sound bearbeiten
 
 </div>
 
-</div>
-
 
 <div class="range-row">
 
-
 <div class="field">
 
-<label>
-Start
-</label>
+<label>Start</label>
 
 <input
   id="startRange"
@@ -817,9 +548,7 @@ Start
 
 <div class="field">
 
-<label>
-Ende
-</label>
+<label>Ende</label>
 
 <input
   id="endRange"
@@ -837,31 +566,22 @@ Ende
 
 </div>
 
-
 </div>
 
 
 <div class="field">
 
-<label>
-Lautstärke
-</label>
+<label>Lautstärke</label>
 
 <input
   id="volumeRange"
   type="range"
   min="0"
   max="100"
-  step="1"
   value="100">
 
 <div class="range-value">
-
-<span id="volumeValue">
-100
-</span>
-%
-
+<span id="volumeValue">100</span> %
 </div>
 
 </div>
@@ -873,11 +593,8 @@ Lautstärke
   id="loopCheck"
   type="checkbox">
 
-<label
-  for="loopCheck">
-
+<label for="loopCheck">
 Sound wiederholen
-
 </label>
 
 </div>
@@ -885,9 +602,7 @@ Sound wiederholen
 
 <div class="field">
 
-<label>
-Name
-</label>
+<label>Name</label>
 
 <input
   id="editName"
@@ -898,55 +613,47 @@ Name
 
 <div class="row">
 
-<button
-  id="closeEdit">
-  Schließen
+<button id="closeEdit">
+Schließen
 </button>
 
-<button
-  id="previewBtn">
-  ▶ Vorschau
+<button id="previewBtn">
+▶ Vorschau
 </button>
 
-<button
-  class="primary"
-  id="saveEdit">
-  Speichern
+<button class="primary" id="saveEdit">
+Speichern
 </button>
 
 </div>
 
 
 <p class="note">
-
-Der Sound wird auf die Millisekunde
-genau zugeschnitten.
-
-Die Originaldatei bleibt erhalten.
-
+Der Schnitt wird auf die Millisekunde genau gespeichert.
+Die ursprüngliche Audiodatei bleibt erhalten.
 </p>
-
 
 </div>
 
 </dialog>
 
 
-
 <script>
 
+/* =====================================================
+   KONFIGURATION
+===================================================== */
 
-/* =========================================================
-   DATENBANK
-========================================================= */
+const DB_NAME = "MySoundboardStudio";
 
-const DB_NAME =
-  "MySoundboardStudio";
+const DB_VERSION = 7;
 
-const DB_VERSION = 6;
+
+/* =====================================================
+   APP STATE
+===================================================== */
 
 let db = null;
-
 
 let state = {
 
@@ -958,12 +665,13 @@ let state = {
     "Hauptboard",
 
   sounds:[]
+
 };
 
 
 let currentEdit = null;
 
-let currentSource = null;
+let currentAudio = null;
 
 let currentPad = null;
 
@@ -971,19 +679,23 @@ let recorder = null;
 
 let recordedChunks = [];
 
-let audioCtx = null;
 
-let decodedCache =
+/*
+  Hier speichern wir vorbereitete
+  Audio-Elemente.
+*/
+
+const audioElements =
   new Map();
 
 
-
-/* =========================================================
+/* =====================================================
    HILFSFUNKTIONEN
-========================================================= */
+===================================================== */
 
 const $ =
-  id => document.getElementById(id);
+  id =>
+    document.getElementById(id);
 
 
 function uid(){
@@ -1000,6 +712,7 @@ function uid(){
   return Date.now() +
     "-" +
     Math.random();
+
 }
 
 
@@ -1018,18 +731,19 @@ function esc(value){
 
       }[c])
     );
+
 }
 
 
 function showStatus(text){
 
-  const el =
+  const element =
     $("status");
 
-  el.textContent =
+  element.textContent =
     text;
 
-  el.classList.add(
+  element.classList.add(
     "show"
   );
 
@@ -1039,15 +753,16 @@ function showStatus(text){
 
   showStatus.timer =
     setTimeout(
-      ()=>{
+      () => {
 
-        el.classList.remove(
+        element.classList.remove(
           "show"
         );
 
       },
       1800
     );
+
 }
 
 
@@ -1079,13 +794,13 @@ function formatTime(seconds){
       .toFixed(3)
       .padStart(6,"0")
   );
+
 }
 
 
-
-/* =========================================================
+/* =====================================================
    INDEXED DB
-========================================================= */
+===================================================== */
 
 function openDB(){
 
@@ -1166,7 +881,6 @@ function openDB(){
 }
 
 
-
 function getMeta(){
 
   return new Promise(
@@ -1196,7 +910,6 @@ function getMeta(){
   );
 
 }
-
 
 
 function saveMeta(){
@@ -1241,7 +954,6 @@ function saveMeta(){
 }
 
 
-
 function getSounds(){
 
   return new Promise(
@@ -1271,7 +983,6 @@ function getSounds(){
   );
 
 }
-
 
 
 function saveSound(sound){
@@ -1306,7 +1017,6 @@ function saveSound(sound){
 }
 
 
-
 function deleteSound(id){
 
   return new Promise(
@@ -1339,24 +1049,16 @@ function deleteSound(id){
 }
 
 
+/* =====================================================
+   ALTE SOUNDS MIGRIEREN
+===================================================== */
 
-/* =========================================================
-   AUDIO DATEN
-========================================================= */
+async function migrateSound(sound){
 
-
-/*
-   Sehr wichtig:
-
-   Alte Versionen haben teilweise
-   "blob" gespeichert.
-
-   Wir wandeln solche Sounds automatisch
-   in "audioData" um.
-*/
-
-
-async function ensureAudioData(sound){
+  /*
+    Neue Version:
+    audioData = ArrayBuffer
+  */
 
   if(
     sound.audioData instanceof
@@ -1367,6 +1069,11 @@ async function ensureAudioData(sound){
 
   }
 
+
+  /*
+    Manche Browser liefern
+    Uint8Array.
+  */
 
   if(
     sound.audioData instanceof
@@ -1384,6 +1091,11 @@ async function ensureAudioData(sound){
 
   }
 
+
+  /*
+    Alte Version:
+    blob
+  */
 
   if(
     sound.blob instanceof Blob
@@ -1406,6 +1118,7 @@ async function ensureAudioData(sound){
       sound
     );
 
+
     return true;
 
   }
@@ -1416,58 +1129,15 @@ async function ensureAudioData(sound){
 }
 
 
+/* =====================================================
+   AUDIO-DATEN → AUDIO ELEMENT
+===================================================== */
 
-/* =========================================================
-   AUDIO CONTEXT
-========================================================= */
+async function createAudioElement(
+  sound
+){
 
-async function getAudioContext(){
-
-  if(!audioCtx){
-
-    const AudioContext =
-      window.AudioContext ||
-      window.webkitAudioContext;
-
-
-    if(!AudioContext){
-
-      throw new Error(
-        "Web Audio wird nicht unterstützt"
-      );
-
-    }
-
-
-    audioCtx =
-      new AudioContext();
-
-  }
-
-
-  if(
-    audioCtx.state ===
-    "suspended"
-  ){
-
-    await audioCtx.resume();
-
-  }
-
-
-  return audioCtx;
-
-}
-
-
-
-/* =========================================================
-   AUDIO BUFFER
-========================================================= */
-
-async function getBuffer(sound){
-
-  await ensureAudioData(
+  await migrateSound(
     sound
   );
 
@@ -1477,78 +1147,143 @@ async function getBuffer(sound){
   ){
 
     throw new Error(
-      "Keine Audiodaten vorhanden"
+      "Keine Audiodaten"
     );
 
   }
 
 
+  /*
+    Wenn bereits ein Audio-Element
+    existiert, verwenden wir dieses.
+  */
+
   if(
-    decodedCache.has(
+    audioElements.has(
       sound.id
     )
   ){
 
-    return decodedCache.get(
+    return audioElements.get(
       sound.id
     );
 
   }
 
 
-  const context =
-    await getAudioContext();
-
-
-  /*
-    slice() erzeugt eine Kopie.
-
-    Das ist auf Safari/iOS
-    zuverlässiger.
-  */
-
-  const data =
-    sound.audioData.slice(0);
-
-
-  const buffer =
-    await context.decodeAudioData(
-      data
+  const blob =
+    new Blob(
+      [
+        sound.audioData
+      ],
+      {
+        type:
+          sound.type ||
+          "audio/mpeg"
+      }
     );
 
 
-  decodedCache.set(
-    sound.id,
-    buffer
+  const url =
+    URL.createObjectURL(
+      blob
+    );
+
+
+  const audio =
+    document.createElement(
+      "audio"
+    );
+
+
+  audio.preload =
+    "auto";
+
+
+  audio.playsInline =
+    true;
+
+
+  audio.setAttribute(
+    "playsinline",
+    ""
   );
 
 
-  return buffer;
+  audio.src =
+    url;
+
+
+  /*
+    Browser soll die Datei
+    sofort vorbereiten.
+  */
+
+  audio.load();
+
+
+  audioElements.set(
+    sound.id,
+    {
+      audio,
+      url
+    }
+  );
+
+
+  return {
+    audio,
+    url
+  };
 
 }
 
 
-
-/* =========================================================
-   STOPPEN
-========================================================= */
+/* =====================================================
+   AUDIO STOPPEN
+===================================================== */
 
 function stopAll(){
 
+  /*
+    Aktuelles Audio stoppen.
+  */
+
   if(
-    currentSource
+    currentAudio
   ){
 
     try{
 
-      currentSource.stop();
+      currentAudio.pause();
+
+      currentAudio.currentTime =
+        0;
 
     }catch(e){}
 
-    currentSource =
-      null;
-
   }
+
+
+  /*
+    Alle vorbereiteten Elemente
+    ebenfalls stoppen.
+  */
+
+  audioElements.forEach(
+    item => {
+
+      try{
+
+        item.audio.pause();
+
+        item.audio.currentTime =
+          0;
+
+      }catch(e){}
+
+    }
+  );
 
 
   document
@@ -1556,11 +1291,15 @@ function stopAll(){
       ".playing"
     )
     .forEach(
-      el =>
-        el.classList.remove(
+      element =>
+        element.classList.remove(
           "playing"
         )
     );
+
+
+  currentAudio =
+    null;
 
 
   currentPad =
@@ -1569,10 +1308,9 @@ function stopAll(){
 }
 
 
-
-/* =========================================================
+/* =====================================================
    SOUND ABSPIELEN
-========================================================= */
+===================================================== */
 
 async function playSound(
   sound,
@@ -1580,8 +1318,11 @@ async function playSound(
 ){
 
   /*
-    Wenn bereits ein Sound läuft,
-    zuerst stoppen.
+    Zuerst alles stoppen.
+
+    Dadurch startet auch derselbe
+    Sound bei erneutem Tippen
+    garantiert von vorne.
   */
 
   stopAll();
@@ -1589,19 +1330,28 @@ async function playSound(
 
   try{
 
-    const context =
-      await getAudioContext();
-
-
-    const buffer =
-      await getBuffer(
+    const item =
+      await createAudioElement(
         sound
       );
 
 
-    const duration =
-      buffer.duration;
+    const audio =
+      item.audio;
 
+
+    /*
+      Wichtig für iPhone/Safari:
+      Das Audio-Element wird
+      nicht neu erzeugt.
+    */
+
+    audio.pause();
+
+
+    /*
+      Start und Ende bestimmen.
+    */
 
     let start =
       Number(sound.start);
@@ -1609,6 +1359,11 @@ async function playSound(
 
     let end =
       Number(sound.end);
+
+
+    const duration =
+      Number(sound.duration) ||
+      audio.duration;
 
 
     if(
@@ -1651,19 +1406,7 @@ async function playSound(
       );
 
 
-    const source =
-      context.createBufferSource();
-
-
-    const gain =
-      context.createGain();
-
-
-    source.buffer =
-      buffer;
-
-
-    gain.gain.value =
+    audio.volume =
       Math.max(
         0,
         Math.min(
@@ -1675,18 +1418,17 @@ async function playSound(
       );
 
 
-    source.connect(
-      gain
-    );
+    /*
+      Safari darf den gleichen
+      Audio-Tag erneut verwenden.
+    */
+
+    audio.currentTime =
+      start;
 
 
-    gain.connect(
-      context.destination
-    );
-
-
-    currentSource =
-      source;
+    currentAudio =
+      audio;
 
 
     currentPad =
@@ -1702,23 +1444,22 @@ async function playSound(
     }
 
 
-    source.onended =
+    /*
+      Über timeupdate beenden wir
+      exakt am gewünschten Ende.
+    */
+
+    const finish =
       () => {
 
-        /*
-          Loop:
-          exakt denselben Ausschnitt
-          erneut abspielen.
-        */
-
         if(
-          sound.loop &&
-          currentSource === source
+          currentAudio !==
+          audio
         ){
 
-          playSound(
-            sound,
-            pad
+          audio.removeEventListener(
+            "timeupdate",
+            finish
           );
 
           return;
@@ -1727,14 +1468,75 @@ async function playSound(
 
 
         if(
-          currentSource === source
+          audio.currentTime >=
+          end - 0.003
         ){
 
-          currentSource =
-            null;
+          if(
+            sound.loop
+          ){
 
-          currentPad =
-            null;
+            audio.currentTime =
+              start;
+
+            audio.play()
+              .catch(
+                console.error
+              );
+
+          }else{
+
+            audio.pause();
+
+            audio.currentTime =
+              0;
+
+
+            if(pad){
+
+              pad.classList.remove(
+                "playing"
+              );
+
+            }
+
+
+            currentAudio =
+              null;
+
+            currentPad =
+              null;
+
+          }
+
+        }
+
+      };
+
+
+    audio.addEventListener(
+      "timeupdate",
+      finish
+    );
+
+
+    /*
+      Wenn die Datei normal endet.
+    */
+
+    const ended =
+      () => {
+
+        audio.removeEventListener(
+          "timeupdate",
+          finish
+        );
+
+
+        if(
+          currentAudio ===
+          audio
+        ){
 
           if(pad){
 
@@ -1744,30 +1546,38 @@ async function playSound(
 
           }
 
+          currentAudio =
+            null;
+
+          currentPad =
+            null;
+
         }
 
       };
 
 
-    /*
-      Hier passiert der eigentliche
-      Zuschnitt.
+    audio.addEventListener(
+      "ended",
+      ended,
+      {
+        once:true
+      }
+    );
 
-      start = Startposition
-      end-start = Länge
+
+    /*
+      Jetzt erfolgt der eigentliche
+      Start.
     */
 
-    source.start(
-      0,
-      start,
-      end - start
-    );
+    await audio.play();
 
 
   }catch(error){
 
     console.error(
-      "Wiedergabe:",
+      "Audio playback error:",
       error
     );
 
@@ -1781,7 +1591,11 @@ async function playSound(
     }
 
 
-    currentSource =
+    currentAudio =
+      null;
+
+
+    currentPad =
       null;
 
 
@@ -1794,184 +1608,234 @@ async function playSound(
 }
 
 
-
-/* =========================================================
+/* =====================================================
    WAVEFORM
-========================================================= */
+===================================================== */
 
-function drawWaveform(
-  buffer
+async function drawWaveform(
+  sound
 ){
 
-  const canvas =
-    $("waveCanvas");
+  try{
 
-
-  const rect =
-    canvas.getBoundingClientRect();
-
-
-  const ratio =
-    window.devicePixelRatio ||
-    1;
-
-
-  const width =
-    Math.max(
-      1,
-      rect.width
+    await migrateSound(
+      sound
     );
 
 
-  const height =
-    Math.max(
-      1,
-      rect.height
-    );
-
-
-  canvas.width =
-    width * ratio;
-
-
-  canvas.height =
-    height * ratio;
-
-
-  const ctx =
-    canvas.getContext(
-      "2d"
-    );
-
-
-  ctx.setTransform(
-    ratio,
-    0,
-    0,
-    ratio,
-    0,
-    0
-  );
-
-
-  const data =
-    buffer.getChannelData(0);
-
-
-  const step =
-    Math.max(
-      1,
-      Math.floor(
-        data.length /
-        width
-      )
-    );
-
-
-  const middle =
-    height / 2;
-
-
-  const amplitude =
-    height * 0.43;
-
-
-  ctx.clearRect(
-    0,
-    0,
-    width,
-    height
-  );
-
-
-  ctx.beginPath();
-
-
-  for(
-    let x=0;
-    x<width;
-    x++
-  ){
-
-    const start =
-      Math.floor(
-        x * step
-      );
-
-
-    let min =
-      1;
-
-    let max =
-      -1;
-
-
-    for(
-      let i=0;
-      i<step &&
-      start+i<data.length;
-      i++
+    if(
+      !sound.audioData
     ){
 
-      const value =
-        data[start+i];
-
-
-      if(
-        value < min
-      ){
-
-        min =
-          value;
-
-      }
-
-
-      if(
-        value > max
-      ){
-
-        max =
-          value;
-
-      }
+      return;
 
     }
 
 
-    ctx.moveTo(
-      x,
-      middle +
-      min * amplitude
+    const AudioContext =
+      window.AudioContext ||
+      window.webkitAudioContext;
+
+
+    if(!AudioContext){
+
+      return;
+
+    }
+
+
+    const context =
+      new AudioContext();
+
+
+    const buffer =
+      await context.decodeAudioData(
+        sound.audioData.slice(0)
+      );
+
+
+    const canvas =
+      $("waveCanvas");
+
+
+    const rect =
+      canvas.getBoundingClientRect();
+
+
+    const ratio =
+      window.devicePixelRatio ||
+      1;
+
+
+    const width =
+      Math.max(
+        1,
+        rect.width
+      );
+
+
+    const height =
+      Math.max(
+        1,
+        rect.height
+      );
+
+
+    canvas.width =
+      width * ratio;
+
+
+    canvas.height =
+      height * ratio;
+
+
+    const ctx =
+      canvas.getContext(
+        "2d"
+      );
+
+
+    ctx.setTransform(
+      ratio,
+      0,
+      0,
+      ratio,
+      0,
+      0
     );
 
 
-    ctx.lineTo(
-      x,
-      middle +
-      max * amplitude
+    const data =
+      buffer.getChannelData(
+        0
+      );
+
+
+    const step =
+      Math.max(
+        1,
+        Math.floor(
+          data.length /
+          width
+        )
+      );
+
+
+    const middle =
+      height / 2;
+
+
+    const amplitude =
+      height * .43;
+
+
+    ctx.clearRect(
+      0,
+      0,
+      width,
+      height
+    );
+
+
+    ctx.beginPath();
+
+
+    for(
+      let x=0;
+      x<width;
+      x++
+    ){
+
+      const start =
+        Math.floor(
+          x * step
+        );
+
+
+      let min=1;
+      let max=-1;
+
+
+      for(
+        let i=0;
+        i<step &&
+        start+i<data.length;
+        i++
+      ){
+
+        const value =
+          data[start+i];
+
+
+        if(
+          value < min
+        ){
+
+          min=value;
+
+        }
+
+
+        if(
+          value > max
+        ){
+
+          max=value;
+
+        }
+
+      }
+
+
+      ctx.moveTo(
+        x,
+        middle +
+        min * amplitude
+      );
+
+
+      ctx.lineTo(
+        x,
+        middle +
+        max * amplitude
+      );
+
+    }
+
+
+    ctx.strokeStyle =
+      "#5b8cff";
+
+
+    ctx.lineWidth =
+      1;
+
+
+    ctx.stroke();
+
+
+    /*
+      AudioContext für die
+      Darstellung schließen.
+    */
+
+    await context.close();
+
+  }catch(error){
+
+    console.error(
+      "Waveform:",
+      error
     );
 
   }
 
-
-  ctx.strokeStyle =
-    "#5b8cff";
-
-
-  ctx.lineWidth =
-    1;
-
-
-  ctx.stroke();
-
 }
 
 
-
-/* =========================================================
+/* =====================================================
    SCHNITTANZEIGE
-========================================================= */
+===================================================== */
 
 function updateSelection(){
 
@@ -1997,17 +1861,18 @@ function updateSelection(){
 
 
   const duration =
-    currentEdit.duration ||
-    0;
+    Number(
+      currentEdit.duration
+    ) || 0;
 
 
   $("selection").style.left =
-    (start * 100) +
+    start * 100 +
     "%";
 
 
   $("selection").style.right =
-    ((1-end) * 100) +
+    (1-end) * 100 +
     "%";
 
 
@@ -2029,10 +1894,9 @@ function updateSelection(){
 }
 
 
-
-/* =========================================================
-   EDITOR ÖFFNEN
-========================================================= */
+/* =====================================================
+   EDITOR
+===================================================== */
 
 async function openEditor(
   sound
@@ -2052,7 +1916,8 @@ async function openEditor(
 
 
   const duration =
-    sound.duration || 0;
+    Number(sound.duration) ||
+    0;
 
 
   let start =
@@ -2077,20 +1942,27 @@ async function openEditor(
 
   $("startRange").value =
     Math.round(
-      (start / duration) *
+      (
+        start /
+        duration
+      ) *
       100000
     );
 
 
   $("endRange").value =
     Math.round(
-      (end / duration) *
+      (
+        end /
+        duration
+      ) *
       100000
     );
 
 
   $("volumeRange").value =
-    sound.volume ?? 100;
+    sound.volume ??
+    100;
 
 
   $("loopCheck").checked =
@@ -2100,36 +1972,20 @@ async function openEditor(
   updateSelection();
 
 
-  $("editDialog").showModal();
+  $("editDialog")
+    .showModal();
 
 
-  try{
-
-    const buffer =
-      await getBuffer(
-        sound
-      );
-
-
-    drawWaveform(
-      buffer
-    );
-
-  }catch(error){
-
-    console.error(
-      error
-    );
-
-  }
+  await drawWaveform(
+    sound
+  );
 
 }
 
 
-
-/* =========================================================
-   RANGE INPUTS
-========================================================= */
+/* =====================================================
+   RANGE
+===================================================== */
 
 $("startRange").oninput =
   updateSelection;
@@ -2143,10 +1999,9 @@ $("volumeRange").oninput =
   updateSelection;
 
 
-
-/* =========================================================
+/* =====================================================
    EDITOR SCHLIESSEN
-========================================================= */
+===================================================== */
 
 $("closeEdit").onclick =
   () => {
@@ -2161,10 +2016,9 @@ $("closeEdit").onclick =
   };
 
 
-
-/* =========================================================
+/* =====================================================
    VORSCHAU
-========================================================= */
+===================================================== */
 
 $("previewBtn").onclick =
   async () => {
@@ -2179,7 +2033,9 @@ $("previewBtn").onclick =
 
 
     const duration =
-      currentEdit.duration;
+      Number(
+        currentEdit.duration
+      );
 
 
     const start =
@@ -2200,15 +2056,15 @@ $("previewBtn").onclick =
 
     const preview =
       {
-
         ...currentEdit,
 
         start:start,
 
-        end:Math.max(
-          start + 0.001,
-          end
-        ),
+        end:
+          Math.max(
+            start + .001,
+            end
+          ),
 
         volume:
           Number(
@@ -2216,7 +2072,6 @@ $("previewBtn").onclick =
           ),
 
         loop:false
-
       };
 
 
@@ -2228,10 +2083,9 @@ $("previewBtn").onclick =
   };
 
 
-
-/* =========================================================
-   ÄNDERUNGEN SPEICHERN
-========================================================= */
+/* =====================================================
+   EDITOR SPEICHERN
+===================================================== */
 
 $("saveEdit").onclick =
   async () => {
@@ -2246,7 +2100,9 @@ $("saveEdit").onclick =
 
 
     const duration =
-      currentEdit.duration;
+      Number(
+        currentEdit.duration
+      );
 
 
     const start =
@@ -2267,7 +2123,7 @@ $("saveEdit").onclick =
 
     end =
       Math.max(
-        start + 0.001,
+        start + .001,
         Math.min(
           duration,
           end
@@ -2306,11 +2162,12 @@ $("saveEdit").onclick =
     );
 
 
-    $("editDialog").close();
+    $("editDialog")
+      .close();
 
 
     showStatus(
-      "Änderungen gespeichert"
+      "Änderungen gespeichert ✓"
     );
 
 
@@ -2319,10 +2176,9 @@ $("saveEdit").onclick =
   };
 
 
-
-/* =========================================================
-   SOUNDS HINZUFÜGEN
-========================================================= */
+/* =====================================================
+   SOUND IMPORTIEREN
+===================================================== */
 
 $("addBtn").onclick =
   () => {
@@ -2340,7 +2196,6 @@ $("cancelAdd").onclick =
       .close();
 
   };
-
 
 
 $("saveAdd").onclick =
@@ -2365,36 +2220,66 @@ $("saveAdd").onclick =
     try{
 
       showStatus(
-        "Audio wird gespeichert …"
+        "Sound wird gespeichert …"
       );
 
 
       /*
-        Die Datei aus Downloads
-        wird hier KOMPLETT in den
-        Speicher der Web-App kopiert.
+        WICHTIG:
+
+        Die Datei wird vollständig
+        aus dem iPhone-Downloads-Ordner
+        eingelesen.
       */
 
       const audioData =
         await file.arrayBuffer();
 
 
-      const context =
-        await getAudioContext();
-
-
       /*
-        Kopie für decodeAudioData.
+        Audio-Dauer bestimmen.
       */
 
-      const decodeData =
-        audioData.slice(0);
-
-
-      const buffer =
-        await context.decodeAudioData(
-          decodeData
+      const tempAudio =
+        document.createElement(
+          "audio"
         );
+
+
+      const tempURL =
+        URL.createObjectURL(
+          file
+        );
+
+
+      tempAudio.src =
+        tempURL;
+
+
+      tempAudio.preload =
+        "metadata";
+
+
+      await new Promise(
+        (resolve,reject)=>{
+
+          tempAudio.onloadedmetadata =
+            resolve;
+
+          tempAudio.onerror =
+            reject;
+
+        }
+      );
+
+
+      const duration =
+        tempAudio.duration;
+
+
+      URL.revokeObjectURL(
+        tempURL
+      );
 
 
       const sound = {
@@ -2407,11 +2292,10 @@ $("saveAdd").onclick =
             .value
             .trim()
           ||
-          file.name
-            .replace(
-              /\.[^.]+$/,
-              ""
-            ),
+          file.name.replace(
+            /\.[^.]+$/,
+            ""
+          ),
 
         icon:
           $("soundIcon")
@@ -2424,9 +2308,8 @@ $("saveAdd").onclick =
           state.current,
 
         /*
-          DAS ist jetzt die
-          dauerhaft gespeicherte
-          Audiodatei.
+          DIESE DATEN BLEIBEN
+          IN DER APP GESPEICHERT.
         */
 
         audioData:
@@ -2437,13 +2320,13 @@ $("saveAdd").onclick =
           "audio/mpeg",
 
         duration:
-          buffer.duration,
+          duration,
 
         start:
           0,
 
         end:
-          buffer.duration,
+          duration,
 
         volume:
           100,
@@ -2452,18 +2335,6 @@ $("saveAdd").onclick =
           false
 
       };
-
-
-      /*
-        Direkt im Cache behalten,
-        damit der erste Start
-        sofort funktioniert.
-      */
-
-      decodedCache.set(
-        sound.id,
-        buffer
-      );
 
 
       state.sounds.push(
@@ -2479,8 +2350,29 @@ $("saveAdd").onclick =
       await saveMeta();
 
 
+      /*
+        Audio sofort vorbereiten.
+      */
+
+      try{
+
+        await createAudioElement(
+          sound
+        );
+
+      }catch(e){
+
+        console.warn(
+          "Preload:",
+          e
+        );
+
+      }
+
+
       $("audioFile").value =
         "";
+
 
       $("soundName").value =
         "";
@@ -2515,10 +2407,9 @@ $("saveAdd").onclick =
   };
 
 
-
-/* =========================================================
-   BOARD ERSTELLEN
-========================================================= */
+/* =====================================================
+   BOARD
+===================================================== */
 
 $("boardBtn").onclick =
   async () => {
@@ -2575,19 +2466,20 @@ $("boardBtn").onclick =
   };
 
 
+/* =====================================================
+   ALLE SOUNDS STOPPEN
+===================================================== */
 
-/* =========================================================
+$("stopAllBtn").onclick =
+  stopAll;
+
+
+/* =====================================================
    AUFNAHME
-========================================================= */
+===================================================== */
 
 $("recordBtn").onclick =
   async () => {
-
-
-    /*
-      Wenn bereits aufgenommen
-      wird -> stoppen.
-    */
 
     if(recorder){
 
@@ -2708,25 +2600,46 @@ $("recordBtn").onclick =
               );
 
 
-            /*
-              Auch die Aufnahme wird
-              komplett als ArrayBuffer
-              gespeichert.
-            */
-
             const audioData =
               await blob.arrayBuffer();
 
 
-            const context =
-              await getAudioContext();
+            const tempAudio =
+              document.createElement(
+                "audio"
+              );
 
 
-            const buffer =
-              await context
-                .decodeAudioData(
-                  audioData.slice(0)
-                );
+            const tempURL =
+              URL.createObjectURL(
+                blob
+              );
+
+
+            tempAudio.src =
+              tempURL;
+
+
+            await new Promise(
+              (resolve,reject)=>{
+
+                tempAudio.onloadedmetadata =
+                  resolve;
+
+                tempAudio.onerror =
+                  reject;
+
+              }
+            );
+
+
+            const duration =
+              tempAudio.duration;
+
+
+            URL.revokeObjectURL(
+              tempURL
+            );
 
 
             const name =
@@ -2759,13 +2672,13 @@ $("recordBtn").onclick =
                 blob.type,
 
               duration:
-                buffer.duration,
+                duration,
 
               start:
                 0,
 
               end:
-                buffer.duration,
+                duration,
 
               volume:
                 100,
@@ -2774,12 +2687,6 @@ $("recordBtn").onclick =
                 false
 
             };
-
-
-            decodedCache.set(
-              sound.id,
-              buffer
-            );
 
 
             state.sounds.push(
@@ -2793,6 +2700,11 @@ $("recordBtn").onclick =
 
 
             await saveMeta();
+
+
+            await createAudioElement(
+              sound
+            );
 
 
             render();
@@ -2842,10 +2754,9 @@ $("recordBtn").onclick =
   };
 
 
-
-/* =========================================================
-   DARSTELLUNG
-========================================================= */
+/* =====================================================
+   RENDER
+===================================================== */
 
 function render(){
 
@@ -2939,19 +2850,13 @@ function render(){
         Math.max(
           0,
           (
-            Number(
-              sound.end
-            ) ||
-            Number(
-              sound.duration
-            ) ||
+            Number(sound.end) ||
+            Number(sound.duration) ||
             0
           )
           -
           (
-            Number(
-              sound.start
-            ) ||
+            Number(sound.start) ||
             0
           )
         );
@@ -2961,49 +2866,27 @@ function render(){
 
         <div>
 
-          <div
-            class="pad-icon">
-
-            ${esc(
-              sound.icon ||
-              "🔊"
-            )}
-
+          <div class="pad-icon">
+            ${esc(sound.icon || "🔊")}
           </div>
 
-
-          <div
-            class="pad-name">
-
-            ${esc(
-              sound.name
-            )}
-
+          <div class="pad-name">
+            ${esc(sound.name)}
           </div>
 
-
-          <div
-            class="pad-time">
-
-            ${formatTime(
-              duration
-            )}
-
+          <div class="pad-time">
+            ${formatTime(duration)}
           </div>
 
         </div>
 
+        <div class="pad-actions">
 
-        <div
-          class="pad-actions">
-
-          <button
-            data-edit>
+          <button data-edit>
             ✎
           </button>
 
-          <button
-            data-delete>
+          <button data-delete>
             🗑️
           </button>
 
@@ -3013,7 +2896,8 @@ function render(){
 
 
       /*
-        GANZE KARTE = PLAY
+        DIE GANZE KARTE
+        IST DER PLAY-BUTTON.
       */
 
       pad.onclick =
@@ -3028,8 +2912,7 @@ function render(){
 
 
       /*
-        Bearbeiten darf nicht
-        gleichzeitig abspielen.
+        Bearbeiten
       */
 
       pad
@@ -3049,8 +2932,7 @@ function render(){
 
 
       /*
-        Löschen darf ebenfalls
-        nicht abspielen.
+        Löschen
       */
 
       pad
@@ -3075,7 +2957,7 @@ function render(){
 
 
           if(
-            currentSource
+            currentAudio
           ){
 
             stopAll();
@@ -3083,9 +2965,35 @@ function render(){
           }
 
 
-          decodedCache.delete(
-            sound.id
-          );
+          const prepared =
+            audioElements.get(
+              sound.id
+            );
+
+
+          if(prepared){
+
+            try{
+
+              prepared.audio.pause();
+
+            }catch(e){}
+
+
+            try{
+
+              URL.revokeObjectURL(
+                prepared.url
+              );
+
+            }catch(e){}
+
+
+            audioElements.delete(
+              sound.id
+            );
+
+          }
 
 
           state.sounds =
@@ -3117,10 +3025,9 @@ function render(){
 }
 
 
-
-/* =========================================================
-   START
-========================================================= */
+/* =====================================================
+   INITIALISIERUNG
+===================================================== */
 
 async function init(){
 
@@ -3169,7 +3076,7 @@ async function init(){
 
 
     /*
-      Sounds aus IndexedDB laden.
+      Sounds aus IndexedDB.
     */
 
     state.sounds =
@@ -3177,9 +3084,8 @@ async function init(){
 
 
     /*
-      Alte Sounds aus einer
-      früheren Version automatisch
-      konvertieren.
+      Alte Blob-Sounds
+      automatisch konvertieren.
     */
 
     for(
@@ -3189,14 +3095,14 @@ async function init(){
 
       try{
 
-        await ensureAudioData(
+        await migrateSound(
           sound
         );
 
       }catch(error){
 
         console.warn(
-          "Audio-Migration:",
+          "Migration fehlgeschlagen:",
           error
         );
 
@@ -3206,6 +3112,38 @@ async function init(){
 
 
     render();
+
+
+    /*
+      Jetzt vorbereiten wir die
+      gespeicherten Sounds.
+
+      Dadurch liegt beim Tippen
+      bereits ein Audio-Element vor.
+    */
+
+    for(
+      const sound of
+      state.sounds
+    ){
+
+      try{
+
+        await createAudioElement(
+          sound
+        );
+
+      }catch(error){
+
+        console.warn(
+          "Audio konnte nicht vorbereitet werden:",
+          sound.name,
+          error
+        );
+
+      }
+
+    }
 
 
   }catch(error){
@@ -3225,33 +3163,26 @@ async function init(){
 }
 
 
-
-/* =========================================================
+/* =====================================================
    RESIZE
-========================================================= */
+===================================================== */
 
 window.addEventListener(
   "resize",
-  async () => {
+  () => {
 
     if(
-      currentEdit &&
-      decodedCache.has(
-        currentEdit.id
-      )
+      currentEdit
     ){
 
       drawWaveform(
-        decodedCache.get(
-          currentEdit.id
-        )
+        currentEdit
       );
 
     }
 
   }
 );
-
 
 
 /* START */
